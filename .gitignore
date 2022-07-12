@@ -1,0 +1,5 @@
+/.vscode/*
+/vendor/*
+
+config/config.json
+config.json
