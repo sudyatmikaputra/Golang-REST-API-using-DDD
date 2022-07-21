@@ -14,5 +14,6 @@ func loadDefaultConfig() map[string]string {
 		"HTTP_PROFILER_PORT":         ":9100",
 		"MIGRATION_PATH":             "database/migrations",
 		"USER_DEFAULT_ROLE":          "becdd3c3-6e9d-4fb9-9f05-6d183c87de16",
+		"JWT_SECRET":                 "#dXpqnt~U)YoQy3JcO~G/<-t.%bIN<Czhy_eAUrla>[tBM'A,tz+nHc8}l,l!$Z",
 	}
 }
