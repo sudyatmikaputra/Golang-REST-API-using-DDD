@@ -28,18 +28,19 @@ func init() {
 }
 
 func GetValue(key string) string {
-	value, ok := configEnv[key]
-	if !ok {
-		return ""
+	value := GetEnv(key) // check if os environemnt variable with the key exists
+	if value == "" {
+		value, ok := configEnv[key] // if value is empty, check config.json file
+		if !ok {
+			return ""
+		}
+		return value
 	}
 	return value
 }
 
 func GetEnv(key string) string {
-	value, ok := configEnv[key]
-	if !ok {
-		return ""
-	}
+	value := os.Getenv(key)
 	return value
 }
 
