@@ -14,20 +14,20 @@ import (
 	"gorm.io/gorm"
 )
 
-// categoryPostgres implements the report category parameter repository service interface
-type reportCategoryPostgres struct {
+// reportParameterPostgres implements the report parameter parameter repository service interface
+type reportParameterPostgres struct {
 	db *gorm.DB
 }
 
-// FindAllCategories queries all report category parameters
-func (s *reportCategoryPostgres) FindAllReportCategories(ctx context.Context, params *public.ListReportCategoryRequest) ([]repository.ReportCategory, error) {
+// FindAllParameters queries all report parameter parameters
+func (s *reportParameterPostgres) FindAllReportParameters(ctx context.Context, params *public.ListReportParameterRequest) ([]repository.ReportParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	var reportCategories []repository.ReportCategory
+	var reportParameters []repository.ReportParameter
 	args := []interface{}{}
 	where := `"deleted_at" IS NULL`
 	if params.Search != "" {
@@ -55,23 +55,23 @@ func (s *reportCategoryPostgres) FindAllReportCategories(ctx context.Context, pa
 		Order(order).
 		Offset(((params.Page - 1) * params.Limit)).
 		Limit(params.Limit).
-		Find(&reportCategories).Error; err != nil {
+		Find(&reportParameters).Error; err != nil {
 		return nil, err
 	}
 
-	return reportCategories, nil
+	return reportParameters, nil
 }
 
-// FindByCategoryID finds report category by its id
-func (s *reportCategoryPostgres) FindReportCategoryByID(ctx context.Context, reportCategoryID uuid.UUID) (*repository.ReportCategory, error) {
+// FindByParameterID finds report parameter by its id
+func (s *reportParameterPostgres) FindReportParameterByID(ctx context.Context, reportParameterID uuid.UUID) (*repository.ReportParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	reportCategory := repository.ReportCategory{}
-	err := db.First(&reportCategory, ` "deleted_at" IS NULL AND "id" = ? `, reportCategoryID).Error
+	reportParameter := repository.ReportParameter{}
+	err := db.First(&reportParameter, ` "deleted_at" IS NULL AND "id" = ? `, reportParameterID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
@@ -80,10 +80,10 @@ func (s *reportCategoryPostgres) FindReportCategoryByID(ctx context.Context, rep
 		return nil, err
 	}
 
-	return &reportCategory, nil
+	return &reportParameter, nil
 }
 
-func (s *reportCategoryPostgres) FindReportCategoryByReportType(ctx context.Context, reportType internal.ParameterType, languageCode string) (*repository.ReportCategory, error) {
+func (s *reportParameterPostgres) FindReportParameterByReportType(ctx context.Context, reportType internal.ParameterType, languageCode string) (*repository.ReportParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
@@ -94,8 +94,8 @@ func (s *reportCategoryPostgres) FindReportCategoryByReportType(ctx context.Cont
 		languageCode = string(internal.BahasaIndonesia)
 	}
 
-	reportCategory := repository.ReportCategory{}
-	err := db.First(&reportCategory, `"deleted_at" IS NULL AND "report_type" = ? AND "language_code" = ? `, reportType, languageCode).Error
+	reportParameter := repository.ReportParameter{}
+	err := db.First(&reportParameter, `"deleted_at" IS NULL AND "report_type" = ? AND "language_code" = ? `, reportType, languageCode).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
@@ -104,51 +104,45 @@ func (s *reportCategoryPostgres) FindReportCategoryByReportType(ctx context.Cont
 		return nil, err
 	}
 
-	return &reportCategory, nil
+	return &reportParameter, nil
 }
 
-// Insert inserts report category
-func (d *reportCategoryPostgres) InsertReportCategory(ctx context.Context, reportCategory *repository.ReportCategory) (*repository.ReportCategory, error) {
+// Insert inserts report parameter
+func (d *reportParameterPostgres) InsertReportParameter(ctx context.Context, reportParameter *repository.ReportParameter) (*repository.ReportParameter, error) {
 	db := d.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	reportCategory.ID, _ = uuid.NewRandom()
+	reportParameter.ID, _ = uuid.NewRandom()
 
-	// now := time.Now().UTC()
-	// reportCategory.CreatedAt = now
-	// reportCategory.UpdatedAt = now
-
-	err := db.Create(reportCategory).Error
+	err := db.Create(reportParameter).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return reportCategory, nil
+	return reportParameter, nil
 }
 
-// UpdateCategory updates report category
-func (d *reportCategoryPostgres) UpdateReportCategory(ctx context.Context, reportCategory *repository.ReportCategory) (*repository.ReportCategory, error) {
+// UpdateParameter updates report parameter
+func (d *reportParameterPostgres) UpdateReportParameter(ctx context.Context, reportParameter *repository.ReportParameter) (*repository.ReportParameter, error) {
 	db := d.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	// now := time.Now().UTC()
-	// reportCategory.UpdatedAt = now
-	err := db.Save(reportCategory).Error
+	err := db.Save(reportParameter).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return reportCategory, nil
+	return reportParameter, nil
 }
 
-// DeleteCategory deletes a report category based on its id
-func (s *reportCategoryPostgres) DeleteReportCategory(ctx context.Context, reportCategory *repository.ReportCategory) error {
+// DeleteParameter deletes a report parameter based on its id
+func (s *reportParameterPostgres) DeleteReportParameter(ctx context.Context, reportParameter *repository.ReportParameter) error {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
@@ -156,8 +150,8 @@ func (s *reportCategoryPostgres) DeleteReportCategory(ctx context.Context, repor
 	}
 
 	now := time.Now().UTC()
-	reportCategory.DeletedAt = &now
-	err := db.Delete(reportCategory).Error
+	reportParameter.DeletedAt = &now
+	err := db.Delete(reportParameter).Error
 	if err != nil {
 		return err
 	}
@@ -165,9 +159,9 @@ func (s *reportCategoryPostgres) DeleteReportCategory(ctx context.Context, repor
 	return nil
 }
 
-// NewCategoryPostgres creates new report category repository
-func NewReportCategoryPostgres() repository.ReportCategoryRepository {
-	return &reportCategoryPostgres{
+// NewParameterPostgres creates new report parameter repository
+func NewReportParameterPostgres() repository.ReportParameterRepository {
+	return &reportParameterPostgres{
 		db: config.DB(),
 	}
 }

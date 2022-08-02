@@ -15,7 +15,7 @@ import (
 	httpResponse "github.com/medicplus-inc/medicplus-kit/net/http"
 )
 
-func ListFeedbacksAnonymouslyForDoctor(application feedbackReportApp.Application) endpoint.Endpoint {
+func ListFeedbacksForDoctorAnonymously(application feedbackReportApp.Application) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (res interface{}, err error) {
 		payload := req.(*public.ListFeedbackRequest)
 
@@ -26,7 +26,7 @@ func ListFeedbacksAnonymouslyForDoctor(application feedbackReportApp.Application
 			if err = container.Injector().Validation.Validator.Struct(payload); err != nil {
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())
 			}
-			res, err = application.Queries.ListFeedbacks.ExecuteDoctor(ctx, *payload)
+			res, err = application.Queries.ListFeedbacksForDoctorAnonymously.Execute(ctx, *payload)
 
 			return err
 		})

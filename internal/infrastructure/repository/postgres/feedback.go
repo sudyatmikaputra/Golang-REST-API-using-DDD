@@ -33,12 +33,12 @@ func (s *feedbackPostgres) FindAllFeedbacks(ctx context.Context, params *public.
 		args = append(args, "%"+params.Search+"%")
 		args = append(args, "%"+params.Search+"%")
 	}
-	if params.FeedbackParamID != uuid.Nil {
+	if params.FeedbackType != "" {
 		if where != "" {
 			where += ` AND `
 		}
-		where += ` "feedback_param_id" = ?`
-		args = append(args, params.FeedbackParamID)
+		where += ` "feedback_type" = ?`
+		args = append(args, params.FeedbackType)
 	}
 	if params.FeedbackToID != uuid.Nil {
 		if where != "" {
@@ -53,13 +53,6 @@ func (s *feedbackPostgres) FindAllFeedbacks(ctx context.Context, params *public.
 		}
 		where += ` "feedback_from_id" = ?`
 		args = append(args, params.FeedbackFromID)
-	}
-	if params.FeedbackTo != "" {
-		if where != "" {
-			where += ` AND `
-		}
-		where += ` "feedback_to" = ?`
-		args = append(args, params.FeedbackTo)
 	}
 
 	order := `"created_at" DESC`
@@ -108,10 +101,6 @@ func (d *feedbackPostgres) InsertFeedback(ctx context.Context, feedback *reposit
 
 	feedback.ID, _ = uuid.NewRandom()
 
-	// now := time.Now().UTC()
-	// feedback.CreatedAt = now
-	// feedback.UpdatedAt = now
-
 	err := db.Create(feedback).Error
 	if err != nil {
 		return nil, err
@@ -127,9 +116,6 @@ func (d *feedbackPostgres) UpdateFeedback(ctx context.Context, feedback *reposit
 	if ok {
 		db = tx
 	}
-
-	// now := time.Now().UTC()
-	// feedback.UpdatedAt = now
 
 	err := db.Save(feedback).Error
 	if err != nil {

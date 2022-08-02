@@ -6,45 +6,34 @@ import (
 
 	"github.com/medicplus-inc/medicplus-feedback/internal"
 	reportDomainService "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report"
-	reportCategoryDomainService "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report_category"
+	reportParameterDomainService "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report_parameter"
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
-// CreateReportCommand encapsulate process for creating report in Command
-type CreateReportCommand struct {
-	reportService   reportDomainService.ReportServiceInterface
-	categoryService reportCategoryDomainService.ReportCategoryServiceInterface
+type CreateReportForPatientDoctorToMedicplusCommand struct {
+	reportService          reportDomainService.ReportServiceInterface
+	reportParameterService reportParameterDomainService.ReportParameterServiceInterface
 }
 
-// NewCreateReportCommand build an Command for creating report
-func NewCreateReportCommand(
+func NewCreateReportForPatientDoctorToMedicplusCommand(
 	reportService reportDomainService.ReportServiceInterface,
-	categoryService reportCategoryDomainService.ReportCategoryServiceInterface,
-) CreateReportCommand {
-	return CreateReportCommand{
-		reportService:   reportService,
-		categoryService: categoryService,
+	reportParameterService reportParameterDomainService.ReportParameterServiceInterface,
+) CreateReportForPatientDoctorToMedicplusCommand {
+	return CreateReportForPatientDoctorToMedicplusCommand{
+		reportService:          reportService,
+		reportParameterService: reportParameterService,
 	}
 }
 
-func (r CreateReportCommand) ExecuteToMedicplus(ctx context.Context, params public.CreateReportRequest) (*public.ReportResponse, error) {
-	// category, err := r.categoryService.GetReportCategory(ctx, params.ReportCategory.ID)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// if category == nil {
-	// 	return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
-	// }
-
+func (r CreateReportForPatientDoctorToMedicplusCommand) Execute(ctx context.Context, params public.CreateReportRequest) (*public.ReportResponse, error) {
 	report, err := r.reportService.CreateReport(ctx, &public.CreateReportRequest{
-		ReportTo:         string(internal.ToMedicplus),
-		ReportCategoryID: params.ReportCategoryID,
-		ReportToID:       params.ReportToID,
-		ReportFromID:     params.ReportFromID,
-		Context:          string(internal.Purchase),
-		ContextID:        params.ContextID,
-		Notes:            params.Notes,
+		ReportType:   string(internal.ToMedicplus),
+		ReportToID:   params.ReportToID,
+		ReportFromID: params.ReportFromID,
+		Context:      string(internal.Medicplus),
+		ContextID:    params.ContextID,
+		Notes:        params.Notes,
 	})
 	if err != nil {
 		return nil, err
@@ -53,7 +42,12 @@ func (r CreateReportCommand) ExecuteToMedicplus(ctx context.Context, params publ
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	// report.ReportCategory = *category
+	reportParameter, err := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), string(internal.BahasaIndonesia))
+	if err != nil {
+		return nil, err
+	}
+
+	report.ReportParameter = *reportParameter
 
 	return report, nil
 }

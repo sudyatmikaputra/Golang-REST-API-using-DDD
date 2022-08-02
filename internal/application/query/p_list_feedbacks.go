@@ -4,31 +4,37 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/medicplus-inc/medicplus-feedback/internal"
 	feedbackDomainService "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/feedback"
 	feedbackParameterDomainService "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/feedback_parameter"
+	"github.com/medicplus-inc/medicplus-feedback/internal/global"
+
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
-// ListFeedbacksQuery encapsulate process for list feedbacks in query
-type ListFeedbacksQuery struct {
-	feedbackService  feedbackDomainService.FeedbackServiceInterface
-	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
+type ListFeedbacksForPatientQuery struct {
+	feedbackService          feedbackDomainService.FeedbackServiceInterface
+	feedbackParameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
 }
 
-// NewListFeedbacksQuery build an query for list feedbacks
-func NewListFeedbacksQuery(
+func NewListFeedbacksForPatientQuery(
 	feedbackService feedbackDomainService.FeedbackServiceInterface,
-	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
-) ListFeedbacksQuery {
-	return ListFeedbacksQuery{
-		feedbackService:  feedbackService,
-		parameterService: parameterService,
+	feedbackParameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
+
+) ListFeedbacksForPatientQuery {
+	return ListFeedbacksForPatientQuery{
+		feedbackService:          feedbackService,
+		feedbackParameterService: feedbackParameterService,
 	}
 }
 
-func (r ListFeedbacksQuery) ExecutePatient(ctx context.Context, params public.ListFeedbackRequest) ([]public.FeedbackResponse, error) {
+func (r ListFeedbacksForPatientQuery) Execute(ctx context.Context, params public.ListFeedbackRequest) ([]public.FeedbackResponse, error) {
+	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	if userLoggedIn["uuid"].(uuid.UUID) != params.FeedbackFromID {
+		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+	}
 	feedbacks, err := r.feedbackService.ListFeedbacks(ctx, &params)
 	if err != nil {
 		return nil, err
@@ -37,27 +43,16 @@ func (r ListFeedbacksQuery) ExecutePatient(ctx context.Context, params public.Li
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	// parameterIDs := []uuid.UUID{}
-	// feedbackParameterMaps := map[uuid.UUID]*public.FeedbackResponse{}
-	// for _, feedback := range feedbacks {
-	// 	// feedbackParameterMaps[feedback.FeedbackParam.ID] = feedback
-	// 	parameterIDs = append(parameterIDs, feedback.FeedbackParam.ID)
-	// }
+	feedbackParameter, err := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
+	if err != nil {
+		return nil, err
+	}
 
-	// allParameters, err := r.parameterService.ListFeedbackParameters(ctx, &public.ListFeedbackParameterRequest{
-	// 	IDs: parameterIDs,
-	// })
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// for _, parameter := range allParameters {
-	// 	feedbackParameterMaps[parameter.ID].FeedbackParam = parameter
-	// }
-
-	// for _, feedback := range feedbacks {
-	// 	feedback.FeedbackParam = feedbackParameterMaps[feedback.FeedbackParam.ID].FeedbackParam
-	// }
+	if feedbackParameter != nil {
+		for _, feedback := range feedbacks {
+			feedback.FeedbackParameter = *feedbackParameter
+		}
+	}
 
 	return feedbacks, nil
 }

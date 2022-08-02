@@ -55,6 +55,7 @@ type ReportContext string
 const (
 	Consultation ReportContext = "consultation"
 	Purchase     ReportContext = "purchase"
+	Medicplus    ReportContext = "medicplus"
 )
 
 // session types

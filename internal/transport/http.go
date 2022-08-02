@@ -26,14 +26,13 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback Parameter
-		r.Get("/feedback-parameter", listFeedbackParameters(opts))
+		r.Get("/feedback-parameter", listFeedbackParameters(opts)) //A
 
 		//Report
-		r.Get("/report/{id}", getReport(opts))
-		r.Get("/report", listReports(opts))
+		r.Get("/report/{id}", getReport(opts)) //A
 
-		//Report Category
-		r.Get("/report-category", listReportCategories(opts))
+		//Report Parameter
+		r.Get("/report-parameter", listReportParameters(opts)) //A
 
 	})
 
@@ -43,14 +42,22 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback Parameter
-		r.Post("/feedback-parameter", createFeedbackParameterForAdmin(opts))
-		r.Delete("/feedback-parameter/{id}", deleteFeedbackParameterForAdmin(opts))
-		r.Put("/feedback-parameter", updateFeedbackParameterForAdmin(opts))
+		r.Post("/feedback-parameter", createFeedbackParameterForAdmin(opts))        //A
+		r.Get("/feedback-parameter/{id}", getFeedbackParameterForAdmin(opts))       //A
+		r.Put("/feedback-parameter", updateFeedbackParameterForAdmin(opts))         //A
+		r.Delete("/feedback-parameter/{id}", deleteFeedbackParameterForAdmin(opts)) //A
 
-		//Report Category
-		r.Post("/report-category", createReportCategoryForAdmin(opts))
-		r.Delete("/report-category/{id}", deleteReportCategoryForAdmin(opts))
-		r.Put("/report-category", updateReportCategoryForAdmin(opts))
+		//Feedback
+		r.Get("/feedback/admin", listFeedbacksForAdmin(opts)) //A
+
+		//Report Parameter
+		r.Post("/report-parameter", createReportParameterForAdmin(opts))        //A
+		r.Get("/report-parameter/{id}", getReportParameterForAdmin(opts))       //A
+		r.Put("/report-parameter", updateReportParameterForAdmin(opts))         //A
+		r.Delete("/report-parameter/{id}", deleteReportParameterForAdmin(opts)) //A
+
+		//Report
+		r.Get("/report/admin", listReportsForAdmin(opts)) //A
 
 	})
 
@@ -60,7 +67,10 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Get("/feedback/doctor", listFeedbacksAnonymouslyForDoctor(opts))
+		r.Get("/feedback/doctor", listFeedbacksForDoctorAnonymously(opts)) //A
+
+		//Report
+		r.Get("/report/doctor", listReportsForDoctorAnonymously(opts)) //A
 
 	})
 
@@ -70,9 +80,12 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Post("/feedback", createFeedbackForPatient(opts))
-		r.Get("/feedback/{id}", getFeedbackForPatient(opts))
-		r.Get("/feedback", listFeedbacksForPatient(opts))
+		r.Post("/feedback", createFeedbackForPatientToDoctor(opts)) //A
+		r.Get("/feedback/patient", listFeedbacksForPatient(opts))   //A
+
+		//Report
+		r.Post("/report/patient/doctor", createReportForPatientToDoctor(opts)) //A
+		r.Get("/report/patient", listReportsForPatient(opts))                  //A
 
 	})
 
@@ -81,38 +94,62 @@ func CompileRoute(
 		r.Use(middleware.PatientOrDoctorVerifier(jwtAuth))
 		r.Use(jwtauth.Authenticator)
 
+		//Feedback
+		r.Post("/feedback/patient-doctor/medicplus", createFeedbackForPatientDoctorToMedicplus(opts)) //A
+		r.Post("/feedback/patient-doctor/merchant", createFeedbackForPatientDoctorToMerchant(opts))   //A
+		r.Get("/feedback/{id}", getFeedbackForPatientDoctor(opts))                                    //A
+		r.Put("/feedback", updateFeedbackForPatientDoctor(opts))                                      //A
+
 		//Report
-		r.Post("/report", createReportForPatientAndDoctor(opts))
+		r.Post("/report/patient-doctor/medicplus", createReportForPatientDoctorToMedicplus(opts)) //A
+		r.Post("/report/patient-doctor/merchant", createReportForPatientDoctorToMerchant(opts))   //A
+		r.Put("/report/patient-doctor", updateReportForPatientDoctor(opts))                       //A
 
 	})
 
 	return r
 }
 
-//Feedback
-func listFeedbacksAnonymouslyForDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
+//Feedback =========================================================================================================================================================================================
+func createFeedbackForPatientToDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.ListFeedbacksAnonymouslyForDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.ListFeedbackRequest{},
-		}, opts).ServeHTTP(w, r)
-	}
-}
-
-func createFeedbackForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.CreateFeedbackForPatient(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateFeedbackForPatientToDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
 			DecodeModel: &public.CreateFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-func getFeedbackForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
+func createFeedbackForPatientDoctorToMedicplus(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.GetFeedbackForPatient(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateFeedbackForPatientDoctorToMedicplus(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.CreateFeedbackRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func createFeedbackForPatientDoctorToMerchant(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateFeedbackForPatientDoctorToMerchant(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.CreateFeedbackRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func getFeedbackForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.GetFeedbackForPatientDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
 			DecodeModel: &public.GetFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
+
+func listFeedbacksForDoctorAnonymously(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.ListFeedbacksForDoctorAnonymously(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.ListFeedbackRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
 
 func listFeedbacksForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -120,16 +157,40 @@ func listFeedbacksForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-//Feedback Parameter
+func listFeedbacksForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.ListFeedbacksForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.ListFeedbackRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func updateFeedbackForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.UpdateFeedbackForPatientDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.UpdateFeedbackRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+//Feedback Parameter =========================================================================================================================================================================================
 func createFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		medicplusKitHttp.NewHTTPServer(endpoint.CreateFeedbackParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
 			DecodeModel: &public.CreateFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
+
+func getFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.GetFeedbackParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.GetFeedbackParameterRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
 
 func listFeedbackParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -137,15 +198,7 @@ func listFeedbackParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
-
-func deleteFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.DeleteFeedbackParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.DeleteFeedbackParameterRequest{},
-		}, opts).ServeHTTP(w, r)
-	}
-}
+} //D
 
 func updateFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -153,62 +206,118 @@ func updateFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFu
 			DecodeModel: &public.UpdateFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-//Report
+func deleteFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.DeleteFeedbackParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.DeleteFeedbackParameterRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+//Report =========================================================================================================================================================================================
+func createReportForPatientToDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateReportForPatientToDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.CreateReportRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func createReportForPatientDoctorToMedicplus(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateReportForPatientDoctorToMedicplus(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.CreateReportRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func createReportForPatientDoctorToMerchant(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateReportForPatientDoctorToMerchant(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.CreateReportRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
 func getReport(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		medicplusKitHttp.NewHTTPServer(endpoint.GetReport(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
 			DecodeModel: &public.GetReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-func listReports(opts []kitHttp.ServerOption) http.HandlerFunc {
+func listReportsForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.ListReports(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+		medicplusKitHttp.NewHTTPServer(endpoint.ListReportsForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
 			DecodeModel: &public.ListReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-func createReportForPatientAndDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
+func listReportsForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.CreateReportForPatientAndDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.CreateReportRequest{},
+		medicplusKitHttp.NewHTTPServer(endpoint.ListReportsForPatient(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.ListReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-//Report Category
-func listReportCategories(opts []kitHttp.ServerOption) http.HandlerFunc {
+func listReportsForDoctorAnonymously(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.ListReportCategories(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.ListReportCategoryRequest{},
+		medicplusKitHttp.NewHTTPServer(endpoint.ListReportsForDoctorAnonymously(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.ListReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-func createReportCategoryForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+func updateReportForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.CreateReportCategoryForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.CreateReportCategoryRequest{},
+		medicplusKitHttp.NewHTTPServer(endpoint.UpdateReportForPatientDoctor(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.UpdateReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-func deleteReportCategoryForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+//Report Parameter =========================================================================================================================================================================================
+func createReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.DeleteReportCategoryForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.DeleteReportCategoryRequest{},
+		medicplusKitHttp.NewHTTPServer(endpoint.CreateReportParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.CreateReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
 
-func updateReportCategoryForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+func getReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		medicplusKitHttp.NewHTTPServer(endpoint.UpdateReportCategoryForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
-			DecodeModel: &public.UpdateReportCategoryRequest{},
+		medicplusKitHttp.NewHTTPServer(endpoint.GetReportParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.GetReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-}
+} //D
+
+func listReportParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.ListReportParameters(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.ListReportParameterRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func updateReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.UpdateReportParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.UpdateReportParameterRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D
+
+func deleteReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		medicplusKitHttp.NewHTTPServer(endpoint.DeleteReportParameterForAdmin(container.Injector().Application.FeedbackReport()), medicplusKitHttp.Option{
+			DecodeModel: &public.DeleteReportParameterRequest{},
+		}, opts).ServeHTTP(w, r)
+	}
+} //D

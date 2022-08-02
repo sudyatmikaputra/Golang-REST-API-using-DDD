@@ -34,11 +34,14 @@ func (s *feedbackParameterPostgres) FindAllFeedbackParameters(ctx context.Contex
 		where += ` AND ("name" ILIKE ?)`
 		args = append(args, "%"+params.Search+"%")
 	}
-	if params.ParameterType != "" {
-		where += ` AND "parameter_type" = ? `
-		args = append(args, params.ParameterType)
+	if params.FeedbackType != "" {
+		where += ` AND "feedback_type" = ? `
+		args = append(args, params.FeedbackType)
 	}
-
+	if params.LanguageCode != "" {
+		where += ` AND "language_code" = ?`
+		args = append(args, params.LanguageCode)
+	}
 	if params.IsDefault != nil {
 		where += ` AND "is_default" = ?`
 		args = append(args, params.IsDefault)
@@ -80,7 +83,7 @@ func (s *feedbackParameterPostgres) FindFeedbackParameterByID(ctx context.Contex
 	return &feedbackParameter, nil
 }
 
-func (s *feedbackParameterPostgres) FindFeedbackParameterByParameterType(ctx context.Context, parameterType internal.ParameterType, languageCode string) (*repository.FeedbackParameter, error) {
+func (s *feedbackParameterPostgres) FindFeedbackParameterByParameterType(ctx context.Context, feedbackType internal.ParameterType, languageCode string) (*repository.FeedbackParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
@@ -92,7 +95,7 @@ func (s *feedbackParameterPostgres) FindFeedbackParameterByParameterType(ctx con
 	}
 
 	feedbackParameter := repository.FeedbackParameter{}
-	err := db.First(&feedbackParameter, `"deleted_at" IS NULL AND "parameter_type" = ? AND "language_code" = ? `, parameterType, languageCode).Error
+	err := db.First(&feedbackParameter, `"deleted_at" IS NULL AND "feedback_type" = ? AND "language_code" = ? `, feedbackType, languageCode).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
@@ -114,10 +117,6 @@ func (d *feedbackParameterPostgres) InsertFeedbackParameter(ctx context.Context,
 
 	feedbackParameter.ID, _ = uuid.NewRandom()
 
-	// now := time.Now().UTC()
-	// feedbackParameter.CreatedAt = now
-	// feedbackParameter.UpdatedAt = now
-
 	err := db.Create(feedbackParameter).Error
 	if err != nil {
 		return nil, err
@@ -133,8 +132,6 @@ func (d *feedbackParameterPostgres) UpdateFeedbackParameter(ctx context.Context,
 	if ok {
 		db = tx
 	}
-	// now := time.Now().UTC()
-	// feedbackParameter.UpdatedAt = now
 	err := db.Save(feedbackParameter).Error
 	if err != nil {
 		return nil, err

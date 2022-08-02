@@ -10,21 +10,19 @@ import (
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
-// CreateFeedbackParameterCommand encapsulate process for creating feedback parameter in Command
-type CreateFeedbackParameterCommand struct {
+type CreateFeedbackParameterForAdminCommand struct {
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
 }
 
-// NewCreateFeedbackParameterCommand build an Command for creating feedback parameter
-func NewCreateFeedbackParameterCommand(
+func NewCreateFeedbackParameterForAdminCommand(
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
-) CreateFeedbackParameterCommand {
-	return CreateFeedbackParameterCommand{
+) CreateFeedbackParameterForAdminCommand {
+	return CreateFeedbackParameterForAdminCommand{
 		parameterService: parameterService,
 	}
 }
 
-func (r CreateFeedbackParameterCommand) Execute(ctx context.Context, params public.CreateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
+func (r CreateFeedbackParameterForAdminCommand) Execute(ctx context.Context, params public.CreateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
 	parameter, err := r.parameterService.CreateFeedbackParameter(ctx, &params)
 	if err != nil {
 		return nil, err

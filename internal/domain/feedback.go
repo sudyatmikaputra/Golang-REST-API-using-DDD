@@ -12,10 +12,9 @@ import (
 
 type Feedback struct {
 	ID                uuid.UUID             `json:"id"`
-	FeedbackTo        internal.ReceiverType `json:"feedback_to"`
+	FeedbackType      internal.ReceiverType `json:"feedback_type"`
 	FeedbackToID      uuid.UUID             `json:"feedback_to_id"`
 	FeedbackFromID    uuid.UUID             `json:"feedback_from_id"`
-	FeedbackParamID   uuid.UUID             `json:"feedback_param_id"`
 	FeedbackParameter *FeedbackParameter    `json:"feedback_parameter"`
 	FeedbackValue     int                   `json:"feedback_value"`
 	Notes             string                `json:"notes"`

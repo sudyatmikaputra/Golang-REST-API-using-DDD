@@ -16,7 +16,6 @@ import (
 func (s *FeedbackService) UpdateFeedback(ctx context.Context, params *public.UpdateFeedbackRequest) (*public.FeedbackResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
 
-	updatedFeedback := &domain.Feedback{}
 	updatedFeedbackRepo, err := s.repository.FindFeedbackByID(ctx, params.ID)
 	if err != nil {
 		return nil, err
@@ -28,19 +27,21 @@ func (s *FeedbackService) UpdateFeedback(ctx context.Context, params *public.Upd
 	if userLoggedIn["uuid"].(uuid.UUID) != updatedFeedbackRepo.FeedbackFromID {
 		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
 	}
+	updatedFeedbackDomain := &domain.Feedback{}
+	updatedFeedbackDomain.FromRepositoryModel(updatedFeedbackRepo)
 
 	if params.FeedbackValue != 0 {
-		updatedFeedbackRepo.FeedbackValue = params.FeedbackValue
+		updatedFeedbackDomain.FeedbackValue = params.FeedbackValue
 	}
 	if params.Notes != "" {
-		updatedFeedbackRepo.Notes = params.Notes
+		updatedFeedbackDomain.Notes = params.Notes
 	}
 
-	updatedFeedbackRepo, err = s.repository.UpdateFeedback(ctx, updatedFeedbackRepo)
+	updatedFeedbackRepo, err = s.repository.UpdateFeedback(ctx, updatedFeedbackDomain.ToRepositoryModel())
 	if err != nil {
 		return nil, err
 	}
-	updatedFeedback.FromRepositoryModel(updatedFeedbackRepo)
+	updatedFeedbackDomain.FromRepositoryModel(updatedFeedbackRepo)
 
-	return updatedFeedback.ToPublicModel(), nil
+	return updatedFeedbackDomain.ToPublicModel(), nil
 }

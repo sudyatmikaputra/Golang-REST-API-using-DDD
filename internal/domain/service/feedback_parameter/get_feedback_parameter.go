@@ -12,8 +12,8 @@ import (
 )
 
 // GetFeedbackParameter get feedback parameter by its id
-func (s *FeedbackParameterService) GetFeedbackParameter(ctx context.Context, parameterID uuid.UUID) (*public.FeedbackParameterResponse, error) {
-	feedbackRepo, err := s.repository.FindFeedbackParameterByID(ctx, parameterID)
+func (s *FeedbackParameterService) GetFeedbackParameter(ctx context.Context, feedbackParameterID uuid.UUID) (*public.FeedbackParameterResponse, error) {
+	feedbackRepo, err := s.repository.FindFeedbackParameterByID(ctx, feedbackParameterID)
 	if err != nil {
 		return nil, err
 	}

@@ -12,7 +12,7 @@ import (
 //DeleteFeedback deleting feedback
 func (s *FeedbackService) DeleteFeedback(ctx context.Context, params *public.DeleteFeedbackRequest) error {
 
-	feedback, err := s.repository.FindFeedbackByID(ctx, params.FeedbackID)
+	feedback, err := s.repository.FindFeedbackByID(ctx, params.ID)
 	if err != nil {
 		return err
 	}

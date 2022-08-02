@@ -17,7 +17,7 @@ import (
 func (s *FeedbackParameterService) CreateFeedbackParameter(ctx context.Context, params *public.CreateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
 
-	existingFeedbackParameter, err := s.repository.FindFeedbackParameterByParameterType(ctx, internal.ParameterType(params.ParameterType), params.LanguageCode)
+	existingFeedbackParameter, err := s.repository.FindFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
 	if err != nil {
 		return nil, err
 	}
@@ -26,15 +26,15 @@ func (s *FeedbackParameterService) CreateFeedbackParameter(ctx context.Context, 
 	}
 
 	feedbackParameter := &domain.FeedbackParameter{
-		ParameterType: internal.ParameterType(params.ParameterType),
-		Name:          params.Name,
-		LanguageCode:  internal.LanguageCode(params.LanguageCode),
-		IsDefault:     params.IsDefault,
+		FeedbackType: internal.ParameterType(params.FeedbackType),
+		Name:         params.Name,
+		LanguageCode: internal.LanguageCode(params.LanguageCode),
+		IsDefault:    params.IsDefault,
+		CreatedBy:    userLoggedIn["uuid"].(uuid.UUID),
+		UpdatedBy:    userLoggedIn["uuid"].(uuid.UUID),
 	}
 
 	feedbackParameterRepo := feedbackParameter.ToRepositoryModel()
-	feedbackParameterRepo.CreatedBy = userLoggedIn["uuid"].(uuid.UUID)
-	feedbackParameterRepo.UpdatedBy = userLoggedIn["uuid"].(uuid.UUID)
 
 	insertedFeedback, err := s.repository.InsertFeedbackParameter(ctx, feedbackParameterRepo)
 	if err != nil {

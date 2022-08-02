@@ -26,7 +26,7 @@ func DeleteFeedbackParameterForAdmin(application feedbackReportApp.Application) 
 			if err = container.Injector().Validation.Validator.Struct(payload); err != nil {
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())
 			}
-			err = application.Commands.DeleteFeedbackParameter.Execute(ctx, *payload)
+			err = application.Commands.DeleteFeedbackParameterForAdmin.Execute(ctx, *payload)
 
 			return err
 		})

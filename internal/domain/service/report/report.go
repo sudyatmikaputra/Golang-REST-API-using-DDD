@@ -11,6 +11,7 @@ import (
 // ReportServiceInterface represents the report service interface
 type ReportServiceInterface interface {
 	ListReports(ctx context.Context, params *public.ListReportRequest) ([]public.ReportResponse, error)
+	ListReportsAnonymously(ctx context.Context, params *public.ListReportRequest) ([]public.AnonymousReportResponse, error)
 	GetReport(ctx context.Context, reportID uuid.UUID) (*public.ReportResponse, error)
 	CreateReport(ctx context.Context, params *public.CreateReportRequest) (*public.ReportResponse, error)
 	UpdateReport(ctx context.Context, params *public.UpdateReportRequest) (*public.ReportResponse, error)

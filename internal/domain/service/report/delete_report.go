@@ -11,7 +11,7 @@ import (
 
 //DeleteReport deleting report
 func (s *ReportService) DeleteReport(ctx context.Context, params *public.DeleteReportRequest) error {
-	reportRepo, err := s.repository.FindReportByID(ctx, params.ReportID)
+	reportRepo, err := s.repository.FindReportByID(ctx, params.ID)
 	if err != nil {
 		return err
 	}

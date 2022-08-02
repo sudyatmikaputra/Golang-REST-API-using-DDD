@@ -13,12 +13,11 @@ import (
 // CreateReport creates a new report
 func (s *ReportService) CreateReport(ctx context.Context, params *public.CreateReportRequest) (*public.ReportResponse, error) {
 	report := &domain.Report{
-		ReportTo:         internal.ReceiverType(params.ReportTo),
-		ReportToID:       params.ReportToID,
-		ReportFromID:     params.ReportFromID,
-		ReportCategoryID: params.ReportCategory.ID,
-		Context:          internal.ReportContext(params.Context),
-		ContextID:        params.ContextID,
+		ReportType:   internal.ReceiverType(params.ReportType),
+		ReportToID:   params.ReportToID,
+		ReportFromID: params.ReportFromID,
+		Context:      internal.ReportContext(params.Context),
+		ContextID:    params.ContextID,
 	}
 	reportRepo := report.ToRepositoryModel()
 	insertedRepo, err := s.repository.InsertReport(ctx, reportRepo)

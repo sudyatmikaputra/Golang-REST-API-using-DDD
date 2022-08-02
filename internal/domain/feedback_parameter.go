@@ -11,35 +11,35 @@ import (
 )
 
 type FeedbackParameter struct {
-	ID            uuid.UUID              `json:"feedback_parameter"`
-	ParameterType internal.ParameterType `json:"parameter_type"`
-	Name          string                 `json:"name"`
-	LanguageCode  internal.LanguageCode  `json:"language_code"`
-	IsDefault     bool                   `json:"is_default"`
-	CreatedBy     uuid.UUID              `json:"created_by"`
-	CreatedAt     time.Time              `json:"created_at"`
-	UpdatedAt     time.Time              `json:"updated_at"`
-	UpdatedBy     uuid.UUID              `json:"updated_by"`
-	DeletedAt     *time.Time             `json:"deleted_at"`
-	DeletedBy     *uuid.UUID             `json:"deleted_by"`
+	ID           uuid.UUID              `json:"feedback_parameter"`
+	FeedbackType internal.ParameterType `json:"feedback_type"`
+	Name         string                 `json:"name"`
+	LanguageCode internal.LanguageCode  `json:"language_code"`
+	IsDefault    bool                   `json:"is_default"`
+	CreatedBy    uuid.UUID              `json:"created_by"`
+	CreatedAt    time.Time              `json:"created_at"`
+	UpdatedAt    time.Time              `json:"updated_at"`
+	UpdatedBy    uuid.UUID              `json:"updated_by"`
+	DeletedAt    *time.Time             `json:"deleted_at"`
+	DeletedBy    *uuid.UUID             `json:"deleted_by"`
 }
 
-func (a *FeedbackParameter) FromPublicModel(parameterPublic interface{}) {
-	_ = encoding.TransformObject(parameterPublic, a)
+func (a *FeedbackParameter) FromPublicModel(feedbackParameterPublic interface{}) {
+	_ = encoding.TransformObject(feedbackParameterPublic, a)
 }
 
 func (a *FeedbackParameter) ToPublicModel() *public.FeedbackParameterResponse {
-	parameterPublic := &public.FeedbackParameterResponse{}
-	_ = encoding.TransformObject(a, parameterPublic)
-	return parameterPublic
+	feedbackParameterPublic := &public.FeedbackParameterResponse{}
+	_ = encoding.TransformObject(a, feedbackParameterPublic)
+	return feedbackParameterPublic
 }
 
-func (a *FeedbackParameter) FromRepositoryModel(feedbackRepo interface{}) {
-	_ = encoding.TransformObject(feedbackRepo, a)
+func (a *FeedbackParameter) FromRepositoryModel(feedbackParameterRepo interface{}) {
+	_ = encoding.TransformObject(feedbackParameterRepo, a)
 }
 
 func (a *FeedbackParameter) ToRepositoryModel() *repository.FeedbackParameter {
-	feedbackRepo := &repository.FeedbackParameter{}
-	_ = encoding.TransformObject(a, feedbackRepo)
-	return feedbackRepo
+	feedbackParameterRepo := &repository.FeedbackParameter{}
+	_ = encoding.TransformObject(a, feedbackParameterRepo)
+	return feedbackParameterRepo
 }

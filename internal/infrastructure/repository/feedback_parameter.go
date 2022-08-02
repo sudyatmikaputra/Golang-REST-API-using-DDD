@@ -10,17 +10,17 @@ import (
 )
 
 type FeedbackParameter struct {
-	ID            uuid.UUID              `json:"feedback_parameter" gorm:"primaryKey,not null"`
-	ParameterType internal.ParameterType `json:"parameter_type" gorm:"not null"`
-	Name          string                 `json:"name" gorm:"index:idx_feedback_name,not null"`
-	LanguageCode  internal.LanguageCode  `json:"language_code" gorm:"index:idx_feedback_language_code,not null"`
-	IsDefault     bool                   `json:"is_default" gorm:"not null"`
-	CreatedBy     uuid.UUID              `json:"created_by" gorm:"not null"`
-	CreatedAt     time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
-	UpdatedAt     time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`
-	UpdatedBy     uuid.UUID              `json:"updated_by" gorm:"not null"`
-	DeletedAt     *time.Time             `json:"deleted_at"`
-	DeletedBy     *uuid.UUID             `json:"deleted_by"`
+	ID           uuid.UUID              `json:"id" gorm:"primaryKey,not null"`
+	FeedbackType internal.ParameterType `json:"feedback_type" gorm:"not null"`
+	Name         string                 `json:"name" gorm:"index:idx_feedback_name,not null"`
+	LanguageCode internal.LanguageCode  `json:"language_code" gorm:"index:idx_feedback_language_code,not null"`
+	IsDefault    bool                   `json:"is_default" gorm:"not null"`
+	CreatedBy    uuid.UUID              `json:"created_by" gorm:"not null"`
+	CreatedAt    time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
+	UpdatedAt    time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`
+	UpdatedBy    uuid.UUID              `json:"updated_by" gorm:"not null"`
+	DeletedAt    *time.Time             `json:"deleted_at"`
+	DeletedBy    *uuid.UUID             `json:"deleted_by"`
 }
 
 type FeedbackParameterRepository interface {

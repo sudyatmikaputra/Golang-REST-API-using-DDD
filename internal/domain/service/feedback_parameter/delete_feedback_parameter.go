@@ -15,7 +15,7 @@ import (
 func (s *FeedbackParameterService) DeleteFeedbackParameter(ctx context.Context, params *public.DeleteFeedbackParameterRequest) error {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
 
-	feedbackParameter, err := s.repository.FindFeedbackParameterByID(ctx, params.FeedbackParameterID)
+	feedbackParameter, err := s.repository.FindFeedbackParameterByID(ctx, params.ID)
 	if err != nil {
 		return err
 	}

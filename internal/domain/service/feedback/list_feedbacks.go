@@ -24,10 +24,10 @@ func (s *FeedbackService) ListFeedbacks(ctx context.Context, params *public.List
 
 	result := []public.FeedbackResponse{}
 	for _, _feedback := range feedbackRepo {
-		feedback := &domain.Feedback{}
-		feedback.FromRepositoryModel(_feedback)
+		feedbackDomain := &domain.Feedback{}
+		feedbackDomain.FromRepositoryModel(_feedback)
 
-		feedbackPublicMode := feedback.ToPublicModel()
+		feedbackPublicMode := feedbackDomain.ToPublicModel()
 		result = append(result, *feedbackPublicMode)
 	}
 

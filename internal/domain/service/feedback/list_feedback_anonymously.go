@@ -27,10 +27,9 @@ func (s *FeedbackService) ListFeedbacksAnonymously(ctx context.Context, params *
 		feedback := &domain.Feedback{}
 		feedback.FromRepositoryModel(_feedback)
 		anonymousFeedback := &public.AnonymousFeedbackResponse{
-			ID:           feedback.ID,
-			FeedbackTo:   string(feedback.FeedbackTo),
-			FeedbackToID: feedback.FeedbackToID,
-			// FeedbackParam: feedback.FeedbackParameter,
+			ID:            feedback.ID,
+			FeedbackType:  string(feedback.FeedbackType),
+			FeedbackToID:  feedback.FeedbackToID,
 			FeedbackValue: feedback.FeedbackValue,
 			Notes:         feedback.Notes,
 		}

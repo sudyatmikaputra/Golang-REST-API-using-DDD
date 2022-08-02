@@ -13,7 +13,7 @@ import (
 
 // GetFeedback get feedback by its id
 func (s *FeedbackService) GetFeedback(ctx context.Context, feedbackID uuid.UUID) (*public.FeedbackResponse, error) {
-	feedback := &domain.Feedback{}
+	feedbackDomain := &domain.Feedback{}
 	feedbackRepo, err := s.repository.FindFeedbackByID(ctx, feedbackID)
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func (s *FeedbackService) GetFeedback(ctx context.Context, feedbackID uuid.UUID)
 	if feedbackRepo == nil {
 		return nil, libError.New(internal.ErrNotFound, http.StatusNotFound, internal.ErrNotFound.Error())
 	}
-	feedback.FromRepositoryModel(feedbackRepo)
+	feedbackDomain.FromRepositoryModel(feedbackRepo)
 
-	return feedback.ToPublicModel(), nil
+	return feedbackDomain.ToPublicModel(), nil
 }

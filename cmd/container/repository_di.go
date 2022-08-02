@@ -9,19 +9,19 @@ type RepositoryIoC struct {
 	feedback          feedbackReportRepo.FeedbackRepository
 	feedbackParameter feedbackReportRepo.FeedbackParameterRepository
 	report            feedbackReportRepo.ReportRepository
-	reportCategory    feedbackReportRepo.ReportCategoryRepository
+	reportParameter   feedbackReportRepo.ReportParameterRepository
 }
 
 func NewRepositoryIoC() RepositoryIoC {
 	feedback := postgres.NewFeedbackPostgres()
 	feedbackParameter := postgres.NewFeedbackParameterPostgres()
 	report := postgres.NewReportPostgres()
-	reportCategory := postgres.NewReportCategoryPostgres()
+	reportParameter := postgres.NewReportParameterPostgres()
 	return RepositoryIoC{
 		feedback:          feedback,
 		feedbackParameter: feedbackParameter,
 		report:            report,
-		reportCategory:    reportCategory,
+		reportParameter:   reportParameter,
 	}
 }
 
@@ -37,6 +37,6 @@ func (ioc RepositoryIoC) Report() feedbackReportRepo.ReportRepository {
 	return ioc.report
 }
 
-func (ioc RepositoryIoC) ReportCategory() feedbackReportRepo.ReportCategoryRepository {
-	return ioc.reportCategory
+func (ioc RepositoryIoC) ReportParameter() feedbackReportRepo.ReportParameterRepository {
+	return ioc.reportParameter
 }

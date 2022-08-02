@@ -26,7 +26,7 @@ func ListFeedbacksForPatient(application feedbackReportApp.Application) endpoint
 			if err = container.Injector().Validation.Validator.Struct(payload); err != nil {
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())
 			}
-			res, err = application.Queries.ListFeedbacks.ExecutePatient(ctx, *payload)
+			res, err = application.Queries.ListFeedbacksForPatient.Execute(ctx, *payload)
 
 			return err
 		})

@@ -10,15 +10,15 @@ import (
 )
 
 type Report struct {
-	ID               uuid.UUID              `json:"id" gorm:"primaryKey,not null"`
-	ReportTo         internal.ReceiverType  `json:"report_to" gorm:"not null"`
-	ReportToID       uuid.UUID              `json:"report_to_id" gorm:"not null"`
-	ReportFromID     uuid.UUID              `json:"report_from_id" gorm:"not null"`
-	ReportCategoryID uuid.UUID              `json:"report_category_id" gorm:"not null"`
-	Context          internal.ReportContext `json:"context"`
-	ContextID        uuid.UUID              `json:"context_id"`
-	CreatedAt        time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
-	UpdatedAt        time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`
+	ID                uuid.UUID              `json:"id" gorm:"primaryKey,not null"`
+	ReportType        internal.ReceiverType  `json:"report_type" gorm:"not null"`
+	ReportToID        uuid.UUID              `json:"report_to_id" gorm:"not null"`
+	ReportFromID      uuid.UUID              `json:"report_from_id" gorm:"not null"`
+	ReportParameterID uuid.UUID              `json:"report_parameter_id" gorm:"not null"`
+	Context           internal.ReportContext `json:"context"`
+	ContextID         uuid.UUID              `json:"context_id"`
+	CreatedAt         time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
+	UpdatedAt         time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`
 }
 
 type ReportRepository interface {

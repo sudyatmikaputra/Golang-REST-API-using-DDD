@@ -4,14 +4,14 @@ import (
 	feedback "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/feedback"
 	feedbackParameter "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/feedback_parameter"
 	report "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report"
-	reportCategory "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report_category"
+	reportParameter "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report_parameter"
 )
 
 type DomainServiceIoC struct {
 	feedback          feedback.FeedbackServiceInterface
 	feedbackParameter feedbackParameter.FeedbackParameterServiceInterface
 	report            report.ReportServiceInterface
-	reportCategory    reportCategory.ReportCategoryServiceInterface
+	reportParameter   reportParameter.ReportParameterServiceInterface
 }
 
 func NewDomainServiceIoC(ioc RepositoryIoC) DomainServiceIoC {
@@ -19,7 +19,7 @@ func NewDomainServiceIoC(ioc RepositoryIoC) DomainServiceIoC {
 		feedback:          feedback.NewFeedbackService(ioc.Feedback()),
 		feedbackParameter: feedbackParameter.NewFeedbackParameterService(ioc.FeedbackParameter()),
 		report:            report.NewReportService(ioc.Report()),
-		reportCategory:    reportCategory.NewReportCategoryService(ioc.ReportCategory()),
+		reportParameter:   reportParameter.NewReportParameterService(ioc.ReportParameter()),
 	}
 }
 
@@ -35,6 +35,6 @@ func (ioc DomainServiceIoC) Report() report.ReportServiceInterface {
 	return ioc.report
 }
 
-func (ioc DomainServiceIoC) ReportCategory() reportCategory.ReportCategoryServiceInterface {
-	return ioc.reportCategory
+func (ioc DomainServiceIoC) ReportParameter() reportParameter.ReportParameterServiceInterface {
+	return ioc.reportParameter
 }

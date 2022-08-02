@@ -8,7 +8,9 @@ import (
 func generateModels() []interface{} {
 	result := []interface{}{}
 	result = append(result, &feedbackRepo.FeedbackParameter{})
-
+	result = append(result, &feedbackRepo.Feedback{})
+	result = append(result, &feedbackRepo.Report{})
+	result = append(result, &feedbackRepo.ReportParameter{})
 	return result
 }
 

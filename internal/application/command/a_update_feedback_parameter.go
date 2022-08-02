@@ -10,21 +10,19 @@ import (
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
-// UpdateFeedbackParameterCommand encapsulate process for updating feedback parameter in Command
-type UpdateFeedbackParameterCommand struct {
+type UpdateFeedbackParameterForAdminCommand struct {
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
 }
 
-// NewUpdateFeedbackParameterCommand build an Command for updating feedback parameter
-func NewUpdateFeedbackParameterCommand(
+func NewUpdateFeedbackParameterForAdminCommand(
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
-) UpdateFeedbackParameterCommand {
-	return UpdateFeedbackParameterCommand{
+) UpdateFeedbackParameterForAdminCommand {
+	return UpdateFeedbackParameterForAdminCommand{
 		parameterService: parameterService,
 	}
 }
 
-func (r UpdateFeedbackParameterCommand) Execute(ctx context.Context, params public.UpdateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
+func (r UpdateFeedbackParameterForAdminCommand) Execute(ctx context.Context, params public.UpdateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
 	parameter, err := r.parameterService.UpdateFeedbackParameter(ctx, &params)
 	if err != nil {
 		return nil, err

@@ -31,15 +31,15 @@ func (s *reportPostgres) FindAllReports(ctx context.Context, params *public.List
 	args := []interface{}{}
 	where := ``
 	if params.Search != "" {
-		where += ` AND ("notes" ILIKE ?)`
+		where += ` AND "notes" ILIKE ?`
 		args = append(args, "%"+params.Search+"%")
 	}
-	if params.ReportCategoryID != uuid.Nil {
+	if params.ReportType != "" {
 		if where != "" {
 			where += ` AND `
 		}
-		where += ` "report_category_id" = ?`
-		args = append(args, params.ReportCategoryID)
+		where += ` "report_type" = ?`
+		args = append(args, params.ReportType)
 	}
 	if params.ReportFromID != uuid.Nil {
 		if where != "" {
@@ -47,13 +47,6 @@ func (s *reportPostgres) FindAllReports(ctx context.Context, params *public.List
 		}
 		where += ` "report_from_id" = ?`
 		args = append(args, params.ReportFromID)
-	}
-	if params.ReportTo != "" {
-		if where != "" {
-			where += ` AND `
-		}
-		where += ` "report_to" = ?`
-		args = append(args, params.ReportTo)
 	}
 	if params.ReportToID != uuid.Nil {
 		if where != "" {
@@ -109,10 +102,6 @@ func (d *reportPostgres) InsertReport(ctx context.Context, report *repository.Re
 
 	report.ID, _ = uuid.NewRandom()
 
-	// now := time.Now().UTC()
-	// report.CreatedAt = now
-	// report.UpdatedAt = now
-
 	err := db.Create(report).Error
 	if err != nil {
 		return nil, err
@@ -129,8 +118,6 @@ func (d *reportPostgres) UpdateReport(ctx context.Context, report *repository.Re
 		db = tx
 	}
 
-	// now := time.Now().UTC()
-	// report.UpdatedAt = now
 	err := db.Save(report).Error
 	if err != nil {
 		return nil, err

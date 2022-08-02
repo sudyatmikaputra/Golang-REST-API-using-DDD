@@ -26,7 +26,7 @@ func UpdateFeedbackParameterForAdmin(application feedbackReportApp.Application) 
 			if err = container.Injector().Validation.Validator.Struct(payload); err != nil {
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())
 			}
-			res, err = application.Commands.UpdateFeedbackParameter.Execute(ctx, *payload)
+			res, err = application.Commands.UpdateFeedbackParameterForAdmin.Execute(ctx, *payload)
 
 			return err
 		})

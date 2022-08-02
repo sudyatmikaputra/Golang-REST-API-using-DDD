@@ -7,21 +7,19 @@ import (
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
 )
 
-// DeleteFeedbackParameterCommand encapsulate process for deleting feedback parameter in Command
-type DeleteFeedbackParameterCommand struct {
+type DeleteFeedbackParameterForAdminCommand struct {
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
 }
 
-// NewDeleteFeedbackParameterCommand build an Command for deleting feedback parameter
-func NewDeleteFeedbackParameterCommand(
+func NewDeleteFeedbackParameterForAdminCommand(
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
-) DeleteFeedbackParameterCommand {
-	return DeleteFeedbackParameterCommand{
+) DeleteFeedbackParameterForAdminCommand {
+	return DeleteFeedbackParameterForAdminCommand{
 		parameterService: parameterService,
 	}
 }
 
-func (r DeleteFeedbackParameterCommand) Execute(ctx context.Context, params public.DeleteFeedbackParameterRequest) error {
+func (r DeleteFeedbackParameterForAdminCommand) Execute(ctx context.Context, params public.DeleteFeedbackParameterRequest) error {
 
 	err := r.parameterService.DeleteFeedbackParameter(ctx, &params)
 	if err != nil {

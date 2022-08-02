@@ -16,7 +16,7 @@ import (
 // UpdateFeedbackParameter updates feedback parameter data
 func (s *FeedbackParameterService) UpdateFeedbackParameter(ctx context.Context, params *public.UpdateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
-	updatedFeedback := &domain.FeedbackParameter{}
+	updatedFeedbackDomain := &domain.FeedbackParameter{}
 	updatedFeedbackRepo, err := s.repository.FindFeedbackParameterByID(ctx, params.ID)
 	if err != nil {
 		return nil, err
@@ -25,17 +25,17 @@ func (s *FeedbackParameterService) UpdateFeedbackParameter(ctx context.Context, 
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	updatedFeedback.FromRepositoryModel(updatedFeedbackRepo)
-	if params.ParameterType != "" {
-		updatedFeedback.ParameterType = internal.ParameterType(params.ParameterType)
+	updatedFeedbackDomain.FromRepositoryModel(updatedFeedbackRepo)
+	if params.FeedbackType != "" {
+		updatedFeedbackDomain.FeedbackType = internal.ParameterType(params.FeedbackType)
 	}
 	if params.Name != "" {
-		updatedFeedback.Name = params.Name
+		updatedFeedbackDomain.Name = params.Name
 	}
 	if params.LanguageCode != "" {
-		updatedFeedback.LanguageCode = internal.LanguageCode(params.LanguageCode)
+		updatedFeedbackDomain.LanguageCode = internal.LanguageCode(params.LanguageCode)
 	}
-	updatedFeedback.IsDefault = params.IsDefault
+	updatedFeedbackDomain.IsDefault = params.IsDefault
 
 	userLoggedInID := userLoggedIn["uuid"].(uuid.UUID)
 	updatedFeedbackRepo.UpdatedBy = userLoggedInID
@@ -44,7 +44,7 @@ func (s *FeedbackParameterService) UpdateFeedbackParameter(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
-	updatedFeedback.FromRepositoryModel(updatedFeedbackRepo)
+	updatedFeedbackDomain.FromRepositoryModel(updatedFeedbackRepo)
 
-	return updatedFeedback.ToPublicModel(), nil
+	return updatedFeedbackDomain.ToPublicModel(), nil
 }

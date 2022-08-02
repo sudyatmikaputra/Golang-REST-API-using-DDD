@@ -5,26 +5,34 @@ import (
 )
 
 type ReportResponse struct {
-	ID               uuid.UUID              `json:"id"`
-	ReportTo         string                 `json:"report_to"`
-	ReportCategoryID uuid.UUID              `json:"report_category_id"`
-	ReportToID       uuid.UUID              `json:"report_to_id"`
-	ReportFromID     uuid.UUID              `json:"report_from_id"`
-	ReportCategory   ReportCategoryResponse `json:"report_category"`
-	Context          string                 `json:"context"`
-	ContextID        uuid.UUID              `json:"context_id"`
-	Notes            string                 `json:"notes"`
+	ID              uuid.UUID               `json:"id"`
+	ReportType      string                  `json:"report_type"`
+	ReportToID      uuid.UUID               `json:"report_to_id"`
+	ReportFromID    uuid.UUID               `json:"report_from_id"`
+	ReportParameter ReportParameterResponse `json:"report_parameter"`
+	Context         string                  `json:"context"`
+	ContextID       uuid.UUID               `json:"context_id"`
+	Notes           string                  `json:"notes"`
+}
+
+type AnonymousReportResponse struct {
+	ID              uuid.UUID               `json:"id"`
+	ReportType      string                  `json:"report_type"`
+	ReportToID      uuid.UUID               `json:"report_to_id"`
+	ReportParameter ReportParameterResponse `json:"report_parameter"`
+	Context         string                  `json:"context"`
+	ContextID       uuid.UUID               `json:"context_id"`
+	Notes           string                  `json:"notes"`
 }
 
 type CreateReportRequest struct {
-	ReportTo         string                 `json:"report_to" validate:"required"`
-	ReportCategoryID uuid.UUID              `json:"report_category_id" validate:"required"`
-	ReportToID       uuid.UUID              `json:"report_to_id" validate:"required"`
-	ReportFromID     uuid.UUID              `json:"report_from_id" validate:"required"`
-	ReportCategory   ReportCategoryResponse `json:"report_category" validate:"required"`
-	Context          string                 `json:"context" validate:"required"`
-	ContextID        uuid.UUID              `json:"context_id" validate:"required"`
-	Notes            string                 `json:"notes" validate:"required"`
+	ReportType      string                  `json:"report_type" validate:"required"`
+	ReportToID      uuid.UUID               `json:"report_to_id" validate:"required"`
+	ReportFromID    uuid.UUID               `json:"report_from_id" validate:"required"`
+	ReportParameter ReportParameterResponse `json:"report_parameter" validate:"required"`
+	Context         string                  `json:"context" validate:"required"`
+	ContextID       uuid.UUID               `json:"context_id" validate:"required"`
+	Notes           string                  `json:"notes" validate:"required"`
 }
 
 type UpdateReportRequest struct {
@@ -33,19 +41,20 @@ type UpdateReportRequest struct {
 }
 
 type ListReportRequest struct {
-	Search           string    `qs:"search"` //Notes
-	Page             int       `qs:"page"`
-	Limit            int       `qs:"limit"`
-	ReportCategoryID uuid.UUID `qs:"report_category_id" validate:"required"`
-	ReportFromID     uuid.UUID `qs:"report_from_id"`
-	ReportTo         string    `qs:"report_to" validate:"required"`
-	ReportToID       uuid.UUID `qs:"report_to_id"`
+	Search       string    `qs:"search"` //Notes
+	Page         int       `qs:"page"`
+	Limit        int       `qs:"limit"`
+	ReportFromID uuid.UUID `qs:"report_from_id"`
+	ReportType   string    `qs:"report_type" validate:"required"`
+	ReportToID   uuid.UUID `qs:"report_to_id"`
+	LanguageCode string    `qs:"language_code" validate:"required,oneof=id en"`
 }
 
 type GetReportRequest struct {
-	ReportID uuid.UUID `url_param:"report_id"`
+	ID           uuid.UUID `qs:"id"`
+	LanguageCode string    `qs:"language_code" validate:"required,oneof=id en"`
 }
 
 type DeleteReportRequest struct {
-	ReportID uuid.UUID `json:"report_id" validate:"required"`
+	ID uuid.UUID `json:"id" validate:"required"`
 }

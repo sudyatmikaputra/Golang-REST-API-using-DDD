@@ -14,7 +14,7 @@ func NewApplicationServiceIoC(dsIoc DomainServiceIoC, rIoc RepositoryIoC) Applic
 			dsIoc.Feedback(),
 			dsIoc.FeedbackParameter(),
 			dsIoc.Report(),
-			dsIoc.ReportCategory(),
+			dsIoc.ReportParameter(),
 		),
 	}
 }

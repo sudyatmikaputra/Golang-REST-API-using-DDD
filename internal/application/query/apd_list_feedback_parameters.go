@@ -10,12 +10,10 @@ import (
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
-// ListFeedbackParametersQuery encapsulate process for listing feedback parameter in query
 type ListFeedbackParametersQuery struct {
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
 }
 
-// NewListFeedbackParametersQuery build an query for listing feedback parameter
 func NewListFeedbackParametersQuery(
 	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
 ) ListFeedbackParametersQuery {

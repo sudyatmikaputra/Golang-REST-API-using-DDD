@@ -13,16 +13,15 @@ import (
 // CreateFeedback creates a new feedback
 func (s *FeedbackService) CreateFeedback(ctx context.Context, params *public.CreateFeedbackRequest) (*public.FeedbackResponse, error) {
 
-	feedback := &domain.Feedback{
-		FeedbackTo:      internal.ReceiverType(params.FeedbackTo),
-		FeedbackParamID: params.FeedbackParamID,
-		FeedbackToID:    params.FeedbackToID,
-		FeedbackFromID:  params.FeedbackFromID,
-		FeedbackValue:   params.FeedbackValue,
-		Notes:           params.Notes,
+	feedbackDomain := &domain.Feedback{
+		FeedbackType:   internal.ReceiverType(params.FeedbackType),
+		FeedbackToID:   params.FeedbackToID,
+		FeedbackFromID: params.FeedbackFromID,
+		FeedbackValue:  params.FeedbackValue,
+		Notes:          params.Notes,
 	}
 
-	feedbackRepo := feedback.ToRepositoryModel()
+	feedbackRepo := feedbackDomain.ToRepositoryModel()
 
 	insertedFeedback, err := s.repository.InsertFeedback(ctx, feedbackRepo)
 	if err != nil {
@@ -32,7 +31,7 @@ func (s *FeedbackService) CreateFeedback(ctx context.Context, params *public.Cre
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	feedback.FromRepositoryModel(insertedFeedback)
+	feedbackDomain.FromRepositoryModel(insertedFeedback)
 
-	return feedback.ToPublicModel(), nil
+	return feedbackDomain.ToPublicModel(), nil
 }

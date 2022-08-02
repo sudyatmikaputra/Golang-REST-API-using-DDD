@@ -10,15 +10,15 @@ import (
 )
 
 type Feedback struct {
-	ID              uuid.UUID             `json:"id" gorm:"primaryKey,not null"`
-	FeedbackTo      internal.ReceiverType `json:"feedback_to" gorm:"not null"`
-	FeedbackToID    uuid.UUID             `json:"feedback_to_id" gorm:"not null"`
-	FeedbackFromID  uuid.UUID             `json:"feedback_from_id" gorm:"not null"`
-	FeedbackParamID uuid.UUID             `json:"feedback_param_id" gorm:"not null"`
-	FeedbackValue   int                   `json:"feedback_value" gorm:"not null"`
-	Notes           string                `json:"notes"`
-	CreatedAt       time.Time             `json:"created_at" gorm:"not null,autoCreateTime"`
-	UpdatedAt       time.Time             `json:"updated_at" gorm:"not null,autoUpdateTime"`
+	ID                  uuid.UUID             `json:"id" gorm:"primaryKey,not null"`
+	FeedbackType        internal.ReceiverType `json:"feedback_type" gorm:"not null"`
+	FeedbackToID        uuid.UUID             `json:"feedback_to_id" gorm:"not null"`
+	FeedbackFromID      uuid.UUID             `json:"feedback_from_id" gorm:"not null"`
+	FeedbackParameterID uuid.UUID             `json:"feedback_parameter_id" gorm:"not null"`
+	FeedbackValue       int                   `json:"feedback_value" gorm:"not null"`
+	Notes               string                `json:"notes"`
+	CreatedAt           time.Time             `json:"created_at" gorm:"not null,autoCreateTime"`
+	UpdatedAt           time.Time             `json:"updated_at" gorm:"not null,autoUpdateTime"`
 }
 
 type FeedbackRepository interface {
