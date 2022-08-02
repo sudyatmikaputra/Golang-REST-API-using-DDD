@@ -39,3 +39,8 @@ const (
 
 	JWT_SECRET = "JWT_SECRET"
 )
+
+// noinspection ALL
+const (
+	OTP_FOR_ENV_DEVELOPMENT = "888888"
+)

@@ -2,42 +2,44 @@ package public
 
 import (
 	"github.com/google/uuid"
-	"github.com/medicplus-inc/medicplus-feedback/internal"
 )
 
 type FeedbackParameterResponse struct {
-	ID            uuid.UUID              `json:"feedback_parameter"`
-	ParameterType internal.ParameterType `json:"parameter_type"`
-	Name          string                 `json:"name"`
-	Language      string                 `json:"language"`
-	IsDefault     bool                   `json:"is_default"`
+	ID            uuid.UUID `json:"id"`
+	ParameterType string    `json:"parameter_type"`
+	Name          string    `json:"name"`
+	LanguageCode  string    `json:"language_code"`
+	IsDefault     bool      `json:"is_default"`
 }
 
 type CreateFeedbackParameterRequest struct {
-	ParameterType internal.ParameterType `json:"parameter_type" validate:"required"`
-	Name          string                 `json:"name" validate:"required"`
-	Language      string                 `json:"language" validate:"required"`
-	IsDefault     bool                   `json:"is_default" validate:"required"`
+	ParameterType string `json:"parameter_type" validate:"required"`
+	Name          string `json:"name" validate:"required"`
+	LanguageCode  string `json:"language_code" validate:"required,oneof=id en"`
+	IsDefault     bool   `json:"is_default" validate:"required"`
 }
 
 type UpdateFeedbackParameterRequest struct {
-	ID            uuid.UUID              `json:"feedback_parameter" validate:"required"`
-	ParameterType internal.ParameterType `json:"parameter_type"`
-	Name          string                 `json:"name"`
-	Language      string                 `json:"language"`
-	IsDefault     bool                   `json:"is_default"`
+	ID            uuid.UUID `json:"id" validate:"required"`
+	ParameterType string    `json:"parameter_type" validate:"required,oneof=all doctor merchant medicplus"`
+	Name          string    `json:"name" validate:"required"`
+	LanguageCode  string    `json:"language_code" validate:"required"`
+	IsDefault     bool      `json:"is_default" validate:"required"`
 }
 
-// ListFeedbackParameterRequest represents params to get List feedbacks parameter
 type ListFeedbackParameterRequest struct {
-	Search string      `json:"search"`
-	ID     uuid.UUID   `json:"id"`
-	IDs    []uuid.UUID `json:"ids"`
-	Page   int         `json:"page" validate:"min=1"`
-	Limit  int         `json:"limit"`
-	Type   string      `json:"parameter_type"`
+	Search        string `qs:"search"` //name
+	Page          int    `qs:"page" validate:"min=1"`
+	Limit         int    `qs:"limit"`
+	ParameterType string `qs:"parameter_type" validate:"required,oneof=all doctor merchant medicplus"`
+	LanguageCode  string `qs:"language_code" validate:"required,oneof=id en"`
+	IsDefault     *bool  `qs:"is_default"`
 }
 
 type GetFeedbackParameterRequest struct {
-	ParameterID uuid.UUID `url_param:"parameter_id" validate:"required"`
+	FeedbackParameterID uuid.UUID `url_param:"feedback_parameter_id" validate:"required"`
+}
+
+type DeleteFeedbackParameterRequest struct {
+	FeedbackParameterID uuid.UUID `json:"feedback_parameter_id" validate:"required"`
 }

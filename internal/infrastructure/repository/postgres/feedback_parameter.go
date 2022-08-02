@@ -2,52 +2,49 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"time"
 
-	"github.com/medicplus-inc/medicplus-feedback/config"
-
 	"github.com/google/uuid"
+	"github.com/medicplus-inc/medicplus-feedback/config"
+	"github.com/medicplus-inc/medicplus-feedback/internal"
 	"github.com/medicplus-inc/medicplus-feedback/internal/infrastructure/repository"
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
 	"github.com/medicplus-inc/medicplus-kit/database"
 	"gorm.io/gorm"
 )
 
-// parameterPostgres implements the feedback parameter repository service interface
-type parameterPostgres struct {
+// feedbackParameterPostgres implements the feedback parameter repository service interface
+type feedbackParameterPostgres struct {
 	db *gorm.DB
 }
 
 // FindAllParameter queries all feedback parameters
-func (s *parameterPostgres) FindAllParameter(ctx context.Context, params *public.ListFeedbackParameterRequest) ([]*repository.FeedbackParameter, error) {
+func (s *feedbackParameterPostgres) FindAllFeedbackParameters(ctx context.Context, params *public.ListFeedbackParameterRequest) ([]repository.FeedbackParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	var feedbacks []repository.FeedbackParameter
+	feedbackParameters := []repository.FeedbackParameter{}
 	args := []interface{}{}
 	where := `"deleted_at" IS NULL`
 	if params.Search != "" {
-		where += ` AND ("name" ILIKE ? OR "parameter_type" ILIKE ?)`
+		where += ` AND ("name" ILIKE ?)`
 		args = append(args, "%"+params.Search+"%")
-		args = append(args, "%"+params.Search+"%")
 	}
-	if params.ID != uuid.Nil {
-		where += ` AND "id" = ?`
-		args = append(args, params.ID)
-	}
-	if len(params.IDs) != 0 {
-		where += ` AND "ids" IN ?`
-		args = append(args, params.IDs)
-	}
-	if params.Type != "" {
-		where += ` AND "parameter_type" ILIKE ?`
-		args = append(args, params.Type)
+	if params.ParameterType != "" {
+		where += ` AND "parameter_type" = ? `
+		args = append(args, params.ParameterType)
 	}
 
-	order := `"id" DESC`
+	if params.IsDefault != nil {
+		where += ` AND "is_default" = ?`
+		args = append(args, params.IsDefault)
+	}
+
+	order := `"created_at" DESC`
 	if err := db.Where(
 		where,
 		args...,
@@ -55,113 +52,118 @@ func (s *parameterPostgres) FindAllParameter(ctx context.Context, params *public
 		Order(order).
 		Offset(((params.Page - 1) * params.Limit)).
 		Limit(params.Limit).
-		Find(&feedbacks).Error; err != nil {
+		Find(&feedbackParameters).Error; err != nil {
 		return nil, err
 	}
 
-	var result []*repository.FeedbackParameter
-	for _, _feedback := range feedbacks {
-		result = append(result, &repository.FeedbackParameter{
-			ID:            _feedback.ID,
-			ParameterType: _feedback.ParameterType,
-			Name:          _feedback.Name,
-			Language:      _feedback.Language,
-			IsDefault:     _feedback.IsDefault,
-			CreatedBy:     _feedback.CreatedBy,
-			CreatedAt:     _feedback.CreatedAt,
-			UpdatedAt:     _feedback.UpdatedAt,
-			UpdatedBy:     _feedback.UpdatedBy,
-			DeletedAt:     _feedback.DeletedAt,
-			DeletedBy:     _feedback.DeletedBy,
-		})
-	}
-
-	return result, nil
+	return feedbackParameters, nil
 }
 
 // FindByParameterID finds feedback by its id
-func (s *parameterPostgres) FindByParameterID(ctx context.Context, parameterID uuid.UUID) (*repository.FeedbackParameter, error) {
+func (s *feedbackParameterPostgres) FindFeedbackParameterByID(ctx context.Context, feedbackParameterID uuid.UUID) (*repository.FeedbackParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	var feedback repository.FeedbackParameter
-	if err := db.First(&feedback, `"id" = ? AND "deleted_at" IS NULL`, parameterID).Error; err != nil {
+	feedbackParameter := repository.FeedbackParameter{}
+	err := db.First(&feedbackParameter, `"deleted_at" IS NULL AND id" = ? `, feedbackParameterID).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
 		return nil, err
 	}
 
-	return &feedback, nil
+	return &feedbackParameter, nil
 }
 
-// DeleteParameter deletes a feedback parameter based on its id
-func (s *parameterPostgres) DeleteParameter(ctx context.Context, parameter *repository.FeedbackParameter) error {
+func (s *feedbackParameterPostgres) FindFeedbackParameterByParameterType(ctx context.Context, parameterType internal.ParameterType, languageCode string) (*repository.FeedbackParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
 	if ok {
 		db = tx
 	}
 
-	if err := db.Delete(parameter).Error; err != nil {
+	if languageCode == "" {
+		languageCode = string(internal.BahasaIndonesia)
+	}
+
+	feedbackParameter := repository.FeedbackParameter{}
+	err := db.First(&feedbackParameter, `"deleted_at" IS NULL AND "parameter_type" = ? AND "language_code" = ? `, parameterType, languageCode).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &feedbackParameter, nil
+}
+
+// Insert inserts feedback parameter
+func (d *feedbackParameterPostgres) InsertFeedbackParameter(ctx context.Context, feedbackParameter *repository.FeedbackParameter) (*repository.FeedbackParameter, error) {
+	db := d.db
+	tx, ok := database.QueryFromContext(ctx)
+	if ok {
+		db = tx
+	}
+
+	feedbackParameter.ID, _ = uuid.NewRandom()
+
+	// now := time.Now().UTC()
+	// feedbackParameter.CreatedAt = now
+	// feedbackParameter.UpdatedAt = now
+
+	err := db.Create(feedbackParameter).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return feedbackParameter, nil
+}
+
+// UpdateParameter updates feedback parameter
+func (d *feedbackParameterPostgres) UpdateFeedbackParameter(ctx context.Context, feedbackParameter *repository.FeedbackParameter) (*repository.FeedbackParameter, error) {
+	db := d.db
+	tx, ok := database.QueryFromContext(ctx)
+	if ok {
+		db = tx
+	}
+	// now := time.Now().UTC()
+	// feedbackParameter.UpdatedAt = now
+	err := db.Save(feedbackParameter).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return feedbackParameter, nil
+}
+
+// DeleteParameter deletes a feedback parameter based on its id
+func (s *feedbackParameterPostgres) DeleteFeedbackParameter(ctx context.Context, feedbackParameter *repository.FeedbackParameter) error {
+	db := s.db
+	tx, ok := database.QueryFromContext(ctx)
+	if ok {
+		db = tx
+	}
+
+	now := time.Now().UTC()
+	feedbackParameter.DeletedAt = &now
+	err := db.Delete(feedbackParameter).Error
+	if err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// Insert inserts feedback parameter
-func (d *parameterPostgres) InsertParameter(ctx context.Context, parameter *repository.FeedbackParameter) (*repository.FeedbackParameter, error) {
-	db := d.db
-	tx, ok := database.QueryFromContext(ctx)
-	if ok {
-		db = tx
-	}
-
-	parameter.ID, _ = uuid.NewRandom()
-	if parameter.CreatedBy == uuid.Nil {
-		parameter.CreatedBy = parameter.ID
-		parameter.UpdatedBy = parameter.ID
-	}
-	parameter.CreatedAt = time.Now().UTC()
-	parameter.UpdatedAt = time.Now().UTC()
-
-	var err error
-
-	if err = db.Create(parameter).Error; err != nil {
-		return nil, err
-	}
-
-	return parameter, nil
-}
-
-// UpdateParameter updates feedback parameter
-func (d *parameterPostgres) UpdateParameter(ctx context.Context, parameter *repository.FeedbackParameter) (*repository.FeedbackParameter, error) {
-	db := d.db
-	tx, ok := database.QueryFromContext(ctx)
-	if ok {
-		db = tx
-	}
-
-	var err error
-
-	if err = db.Save(parameter).Error; err != nil {
-		return nil, err
-	}
-
-	return parameter, nil
-}
-
 // NewParameterPostgres creates new feedback parameter repository
-func NewParameterPostgres() repository.FeedbackParameterRepository {
-	return &parameterPostgres{
+func NewFeedbackParameterPostgres() repository.FeedbackParameterRepository {
+	return &feedbackParameterPostgres{
 		db: config.DB(),
-	}
-}
-
-// NewParameterPostgresMock creates new feedback parameter repository mock for testing purpose only
-func NewParameterPostgresMock(db *gorm.DB) repository.FeedbackParameterRepository {
-	return &parameterPostgres{
-		db: db,
 	}
 }

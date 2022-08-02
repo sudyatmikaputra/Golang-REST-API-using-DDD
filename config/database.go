@@ -2,11 +2,15 @@ package config
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"sync"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var db *gorm.DB
@@ -21,8 +25,20 @@ func DB() *gorm.DB {
 		if db == nil {
 			var err error
 
+			dbLogger := logger.New(
+				log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+				logger.Config{
+					SlowThreshold:             time.Second, // Slow SQL threshold
+					LogLevel:                  logger.Info, // Log level
+					IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+					Colorful:                  true,        // Disable color
+				},
+			)
+
 			dsn := getPostgresDSN()
-			db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+			db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+				Logger: dbLogger,
+			})
 
 			if nil != err {
 				GetLogger().WithFields(logrus.Fields{

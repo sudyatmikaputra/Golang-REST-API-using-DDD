@@ -4,7 +4,7 @@ import (
 	"fmt"
 	netHttp "net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/medicplus-inc/medicplus-feedback/cmd/container"
 	"github.com/medicplus-inc/medicplus-feedback/cmd/http"
 	"github.com/medicplus-inc/medicplus-feedback/config"

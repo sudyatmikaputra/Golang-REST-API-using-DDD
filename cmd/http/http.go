@@ -8,8 +8,8 @@ import (
 	"github.com/medicplus-inc/medicplus-kit/net/http/encoding"
 	"github.com/rs/cors"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	feedback "github.com/medicplus-inc/medicplus-feedback/internal/transport"
 	medicplusMiddleware "github.com/medicplus-inc/medicplus-feedback/lib/net/http/middleware"
 )
