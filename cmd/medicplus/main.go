@@ -20,11 +20,12 @@ func main() {
 	container.NewIOC()
 
 	runMigration()
-	injectSeed()
+	// injectSeed()
 	runHTTP(&g, *logger)
 	runHTTPProfiler(&g, *logger)
 
 	logger.Fatal("exit", g.Run())
+
 }
 
 func runMigration() {
