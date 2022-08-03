@@ -1,6 +1,8 @@
 package container
 
 import (
+	"github.com/go-redis/redis"
+	"github.com/medicplus-inc/medicplus-feedback/config"
 	feedbackReportRepo "github.com/medicplus-inc/medicplus-feedback/internal/infrastructure/repository"
 	"github.com/medicplus-inc/medicplus-feedback/internal/infrastructure/repository/postgres"
 )
@@ -10,6 +12,7 @@ type RepositoryIoC struct {
 	feedbackParameter feedbackReportRepo.FeedbackParameterRepository
 	report            feedbackReportRepo.ReportRepository
 	reportParameter   feedbackReportRepo.ReportParameterRepository
+	redis             *redis.Client
 }
 
 func NewRepositoryIoC() RepositoryIoC {
@@ -22,6 +25,7 @@ func NewRepositoryIoC() RepositoryIoC {
 		feedbackParameter: feedbackParameter,
 		report:            report,
 		reportParameter:   reportParameter,
+		redis:             config.Redis(),
 	}
 }
 
@@ -39,4 +43,8 @@ func (ioc RepositoryIoC) Report() feedbackReportRepo.ReportRepository {
 
 func (ioc RepositoryIoC) ReportParameter() feedbackReportRepo.ReportParameterRepository {
 	return ioc.reportParameter
+}
+
+func (ioc RepositoryIoC) Redis() *redis.Client {
+	return ioc.redis
 }

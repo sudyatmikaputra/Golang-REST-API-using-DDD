@@ -13,7 +13,7 @@ func AdminVerifier(jwt *jwtauth.JWTAuth) func(http.Handler) http.Handler {
 			token, err := jwtauth.VerifyRequest(jwt, r, jwtauth.TokenFromHeader, jwtauth.TokenFromCookie)
 			if err == nil {
 				claims := token.PrivateClaims()
-				if claims["roles"] != "admin" {
+				if claims["role"] != "admin" {
 					err = jwtauth.ErrUnauthorized
 				}
 			}
@@ -32,7 +32,7 @@ func PatientVerifier(jwt *jwtauth.JWTAuth) func(http.Handler) http.Handler {
 			token, err := jwtauth.VerifyRequest(jwt, r, jwtauth.TokenFromHeader, jwtauth.TokenFromCookie)
 			if err == nil {
 				claims := token.PrivateClaims()
-				if claims["roles"] != "patient" {
+				if claims["role"] != "patient" {
 					err = jwtauth.ErrUnauthorized
 				}
 			}
@@ -51,7 +51,7 @@ func DoctorVerifier(jwt *jwtauth.JWTAuth) func(http.Handler) http.Handler {
 			token, err := jwtauth.VerifyRequest(jwt, r, jwtauth.TokenFromHeader, jwtauth.TokenFromCookie)
 			if err == nil {
 				claims := token.PrivateClaims()
-				if claims["roles"] != "doctor" {
+				if claims["role"] != "doctor" {
 					err = jwtauth.ErrUnauthorized
 				}
 			}

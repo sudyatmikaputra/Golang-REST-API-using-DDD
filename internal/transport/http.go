@@ -26,13 +26,13 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback Parameter
-		r.Get("/feedback-parameter", listFeedbackParameters(opts)) //A
+		r.Get("/feedback-parameters", listFeedbackParameters(opts)) //A
 
 		//Report
 		r.Get("/report/{id}", getReport(opts)) //A
 
 		//Report Parameter
-		r.Get("/report-parameter", listReportParameters(opts)) //A
+		r.Get("/report-parameters", listReportParameters(opts)) //A
 
 	})
 
@@ -48,7 +48,7 @@ func CompileRoute(
 		r.Delete("/feedback-parameter/{id}", deleteFeedbackParameterForAdmin(opts)) //A
 
 		//Feedback
-		r.Get("/feedback/admin", listFeedbacksForAdmin(opts)) //A
+		r.Get("/feedbacks/admin", listFeedbacksForAdmin(opts)) //A
 
 		//Report Parameter
 		r.Post("/report-parameter", createReportParameterForAdmin(opts))        //A
@@ -57,7 +57,7 @@ func CompileRoute(
 		r.Delete("/report-parameter/{id}", deleteReportParameterForAdmin(opts)) //A
 
 		//Report
-		r.Get("/report/admin", listReportsForAdmin(opts)) //A
+		r.Get("/reports/admin", listReportsForAdmin(opts)) //A
 
 	})
 
@@ -67,10 +67,10 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Get("/feedback/doctor", listFeedbacksForDoctorAnonymously(opts)) //A
+		r.Get("/feedbacks/doctor", listFeedbacksForDoctorAnonymously(opts)) //A
 
 		//Report
-		r.Get("/report/doctor", listReportsForDoctorAnonymously(opts)) //A
+		r.Get("/reports/doctor", listReportsForDoctorAnonymously(opts)) //A
 
 	})
 
@@ -80,12 +80,12 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Post("/feedback", createFeedbackForPatientToDoctor(opts)) //A
-		r.Get("/feedback/patient", listFeedbacksForPatient(opts))   //A
+		r.Post("/feedback-doctor", createFeedbackForPatientToDoctor(opts)) //A
+		r.Get("/feedbacks/patient", listFeedbacksForPatient(opts))         //A
 
 		//Report
-		r.Post("/report/patient/doctor", createReportForPatientToDoctor(opts)) //A
-		r.Get("/report/patient", listReportsForPatient(opts))                  //A
+		r.Post("/report-doctor", createReportForPatientToDoctor(opts)) //A
+		r.Get("/reports/patient", listReportsForPatient(opts))         //A
 
 	})
 
@@ -95,15 +95,15 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Post("/feedback/patient-doctor/medicplus", createFeedbackForPatientDoctorToMedicplus(opts)) //A
-		r.Post("/feedback/patient-doctor/merchant", createFeedbackForPatientDoctorToMerchant(opts))   //A
-		r.Get("/feedback/{id}", getFeedbackForPatientDoctor(opts))                                    //A
-		r.Put("/feedback", updateFeedbackForPatientDoctor(opts))                                      //A
+		r.Post("/feedback-medicplus", createFeedbackForPatientDoctorToMedicplus(opts)) //A
+		r.Post("/feedback-merchant", createFeedbackForPatientDoctorToMerchant(opts))   //A
+		r.Get("/feedback/{id}", getFeedbackForPatientDoctor(opts))                     //A
+		r.Put("/feedback", updateFeedbackForPatientDoctor(opts))                       //A
 
 		//Report
-		r.Post("/report/patient-doctor/medicplus", createReportForPatientDoctorToMedicplus(opts)) //A
-		r.Post("/report/patient-doctor/merchant", createReportForPatientDoctorToMerchant(opts))   //A
-		r.Put("/report/patient-doctor", updateReportForPatientDoctor(opts))                       //A
+		r.Post("/report-medicplus", createReportForPatientDoctorToMedicplus(opts)) //A
+		r.Post("/report-merchant", createReportForPatientDoctorToMerchant(opts))   //A
+		r.Put("/report", updateReportForPatientDoctor(opts))                       //A
 
 	})
 
