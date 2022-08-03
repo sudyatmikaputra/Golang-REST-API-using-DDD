@@ -18,7 +18,7 @@ func CompileRoute(
 	r *chi.Mux,
 	opts []kitHttp.ServerOption,
 ) http.Handler {
-	jwtAuth := jwtauth.New("HS256", []byte(config.GetEnv(config.JWT_SECRET)), nil)
+	jwtAuth := jwtauth.New("HS256", []byte(config.GetValue(config.JWT_SECRET)), nil)
 
 	// For general use
 	r.Group(func(r chi.Router) {
