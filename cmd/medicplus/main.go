@@ -25,6 +25,7 @@ func main() {
 	runHTTPProfiler(&g, *logger)
 
 	logger.Fatal("exit", g.Run())
+
 }
 
 func runMigration() {
