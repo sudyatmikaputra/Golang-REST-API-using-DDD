@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
@@ -23,9 +24,12 @@ func CreateReportParameterForAdmin(application feedbackReportApp.Application) en
 			if payload == nil {
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())
 			}
+			fmt.Println("TEST")
 			if err = container.Injector().Validation.Validator.Struct(payload); err != nil {
+				fmt.Println("after TEST")
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())
 			}
+
 			res, err = application.Commands.CreateReportParameterForAdmin.Execute(ctx, *payload)
 
 			return err

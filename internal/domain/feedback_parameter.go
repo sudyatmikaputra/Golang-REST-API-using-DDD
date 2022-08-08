@@ -11,7 +11,7 @@ import (
 )
 
 type FeedbackParameter struct {
-	ID           uuid.UUID              `json:"feedback_parameter"`
+	ID           uuid.UUID              `json:"id"`
 	FeedbackType internal.ParameterType `json:"feedback_type"`
 	Name         string                 `json:"name"`
 	LanguageCode internal.LanguageCode  `json:"language_code"`

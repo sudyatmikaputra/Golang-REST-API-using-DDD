@@ -19,6 +19,7 @@ func (s *FeedbackParameterService) GetFeedbackParameterByParameterType(ctx conte
 	if feedbackRepo == nil {
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
+
 	feedback := &domain.FeedbackParameter{}
 
 	feedback.FromRepositoryModel(feedbackRepo)

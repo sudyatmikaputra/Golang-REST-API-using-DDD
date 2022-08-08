@@ -41,12 +41,16 @@ func (r CreateFeedbackForPatientToDoctorCommand) Execute(ctx context.Context, pa
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	feedbackParameter, err := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), string(internal.BahasaIndonesia))
-	if err != nil {
-		return nil, err
+	feedbackParameter, _ := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), string(internal.BahasaIndonesia))
+	if feedbackParameter != nil {
+		feedback.FeedbackParameter = public.FeedbackParameterResponse{
+			ID:           feedbackParameter.ID,
+			FeedbackType: feedbackParameter.FeedbackType,
+			Name:         feedbackParameter.Name,
+			LanguageCode: feedbackParameter.Name,
+			IsDefault:    feedbackParameter.IsDefault,
+		}
 	}
-
-	feedback.FeedbackParameter = *feedbackParameter
 
 	return feedback, nil
 }

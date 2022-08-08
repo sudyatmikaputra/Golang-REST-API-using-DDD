@@ -2,6 +2,7 @@ package feedback_parameter
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -24,15 +25,30 @@ func (s *FeedbackParameterService) CreateFeedbackParameter(ctx context.Context, 
 	if existingFeedbackParameter != nil {
 		return nil, libError.New(internal.ErrLanguageCodeAlreadyExists, http.StatusBadRequest, internal.ErrLanguageCodeAlreadyExists.Error())
 	}
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+	userLoggedInName := userLoggedIn["name"].(string)
+	userLoggedInRole := userLoggedIn["role"].(string)
+
+	fmt.Println(params.FeedbackType)
+	fmt.Println(params.Name)
+	fmt.Println(params.LanguageCode)
+	fmt.Println(params.IsDefault)
+	fmt.Println("before domain")
+
+	fmt.Println(userLoggedInID)
+	fmt.Println(userLoggedInName)
+	fmt.Println(userLoggedInRole)
 
 	feedbackParameter := &domain.FeedbackParameter{
 		FeedbackType: internal.ParameterType(params.FeedbackType),
 		Name:         params.Name,
 		LanguageCode: internal.LanguageCode(params.LanguageCode),
 		IsDefault:    params.IsDefault,
-		CreatedBy:    userLoggedIn["uuid"].(uuid.UUID),
-		UpdatedBy:    userLoggedIn["uuid"].(uuid.UUID),
+		CreatedBy:    userLoggedInID,
+		UpdatedBy:    userLoggedInID,
 	}
+
+	fmt.Println("after domain")
 
 	feedbackParameterRepo := feedbackParameter.ToRepositoryModel()
 

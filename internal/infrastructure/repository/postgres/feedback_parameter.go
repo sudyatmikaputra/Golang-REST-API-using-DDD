@@ -14,12 +14,10 @@ import (
 	"gorm.io/gorm"
 )
 
-// feedbackParameterPostgres implements the feedback parameter repository service interface
 type feedbackParameterPostgres struct {
 	db *gorm.DB
 }
 
-// FindAllParameter queries all feedback parameters
 func (s *feedbackParameterPostgres) FindAllFeedbackParameters(ctx context.Context, params *public.ListFeedbackParameterRequest) ([]repository.FeedbackParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
@@ -62,7 +60,6 @@ func (s *feedbackParameterPostgres) FindAllFeedbackParameters(ctx context.Contex
 	return feedbackParameters, nil
 }
 
-// FindByParameterID finds feedback by its id
 func (s *feedbackParameterPostgres) FindFeedbackParameterByID(ctx context.Context, feedbackParameterID uuid.UUID) (*repository.FeedbackParameter, error) {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
@@ -107,7 +104,6 @@ func (s *feedbackParameterPostgres) FindFeedbackParameterByParameterType(ctx con
 	return &feedbackParameter, nil
 }
 
-// Insert inserts feedback parameter
 func (d *feedbackParameterPostgres) InsertFeedbackParameter(ctx context.Context, feedbackParameter *repository.FeedbackParameter) (*repository.FeedbackParameter, error) {
 	db := d.db
 	tx, ok := database.QueryFromContext(ctx)
@@ -125,7 +121,6 @@ func (d *feedbackParameterPostgres) InsertFeedbackParameter(ctx context.Context,
 	return feedbackParameter, nil
 }
 
-// UpdateParameter updates feedback parameter
 func (d *feedbackParameterPostgres) UpdateFeedbackParameter(ctx context.Context, feedbackParameter *repository.FeedbackParameter) (*repository.FeedbackParameter, error) {
 	db := d.db
 	tx, ok := database.QueryFromContext(ctx)
@@ -140,7 +135,6 @@ func (d *feedbackParameterPostgres) UpdateFeedbackParameter(ctx context.Context,
 	return feedbackParameter, nil
 }
 
-// DeleteParameter deletes a feedback parameter based on its id
 func (s *feedbackParameterPostgres) DeleteFeedbackParameter(ctx context.Context, feedbackParameter *repository.FeedbackParameter) error {
 	db := s.db
 	tx, ok := database.QueryFromContext(ctx)
@@ -158,7 +152,6 @@ func (s *feedbackParameterPostgres) DeleteFeedbackParameter(ctx context.Context,
 	return nil
 }
 
-// NewParameterPostgres creates new feedback parameter repository
 func NewFeedbackParameterPostgres() repository.FeedbackParameterRepository {
 	return &feedbackParameterPostgres{
 		db: config.DB(),

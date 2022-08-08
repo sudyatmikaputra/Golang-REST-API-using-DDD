@@ -45,9 +45,9 @@ type ListReportRequest struct {
 	Page         int       `qs:"page"`
 	Limit        int       `qs:"limit"`
 	ReportFromID uuid.UUID `qs:"report_from_id"`
-	ReportType   string    `qs:"report_type" validate:"required"`
+	ReportType   string    `json:"report_type" validate:"required"`
 	ReportToID   uuid.UUID `qs:"report_to_id"`
-	LanguageCode string    `qs:"language_code" validate:"required,oneof=id en"`
+	LanguageCode string    `json:"language_code" validate:"required,oneof=id en"`
 }
 
 type GetReportRequest struct {

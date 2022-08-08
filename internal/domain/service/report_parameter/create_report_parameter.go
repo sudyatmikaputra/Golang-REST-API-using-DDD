@@ -2,6 +2,7 @@ package report_parameter
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -15,6 +16,14 @@ import (
 // CreateReportCategory creates a new report catgeory
 func (s *ReportParameterService) CreateReportParameter(ctx context.Context, params *public.CreateReportParameterRequest) (*public.ReportParameterResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
+	fmt.Println(internal.ParameterType(params.ReportType))
+	fmt.Println(params.Name)
+	fmt.Println(internal.LanguageCode(params.LanguageCode))
+	fmt.Println(params.IsDefault)
+	fmt.Println("before domain")
+	fmt.Println(userLoggedInID)
 
 	existingReportParameter, err := s.repository.FindReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
 	if err != nil {
@@ -24,7 +33,6 @@ func (s *ReportParameterService) CreateReportParameter(ctx context.Context, para
 		return nil, libError.New(internal.ErrLanguageCodeAlreadyExists, http.StatusBadRequest, internal.ErrLanguageCodeAlreadyExists.Error())
 	}
 
-	userLoggedInID := userLoggedIn["uuid"].(uuid.UUID)
 	reportParameterDomain := &domain.ReportParameter{
 		ReportType:   internal.ParameterType(params.ReportType),
 		Name:         params.Name,
@@ -33,6 +41,8 @@ func (s *ReportParameterService) CreateReportParameter(ctx context.Context, para
 		CreatedBy:    userLoggedInID,
 		UpdatedBy:    userLoggedInID,
 	}
+
+	fmt.Println("after domain")
 
 	reportParameterRepo := reportParameterDomain.ToRepositoryModel()
 

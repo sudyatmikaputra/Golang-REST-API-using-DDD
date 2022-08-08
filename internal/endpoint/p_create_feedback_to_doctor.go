@@ -18,7 +18,6 @@ import (
 func CreateFeedbackForPatientToDoctor(application feedbackReportApp.Application) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (res interface{}, err error) {
 		payload := req.(*public.CreateFeedbackRequest)
-
 		err = database.RunInTransaction(ctx, config.DB(), func(ctx context.Context) (err error) {
 			if payload == nil {
 				return libError.New(err, http.StatusBadRequest, internal.ErrInvalidRequest.Error())

@@ -97,7 +97,7 @@ func CompileRoute(
 		//Feedback
 		r.Post("/feedback-medicplus", createFeedbackForPatientDoctorToMedicplus(opts)) //A
 		r.Post("/feedback-merchant", createFeedbackForPatientDoctorToMerchant(opts))   //A
-		r.Get("/feedback/{id}", getFeedbackForPatientDoctor(opts))                     //A
+		r.Get("/feedback", getFeedbackForPatientDoctor(opts))                          //A
 		r.Put("/feedback", updateFeedbackForPatientDoctor(opts))                       //A
 
 		//Report

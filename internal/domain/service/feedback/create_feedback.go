@@ -12,7 +12,6 @@ import (
 
 // CreateFeedback creates a new feedback
 func (s *FeedbackService) CreateFeedback(ctx context.Context, params *public.CreateFeedbackRequest) (*public.FeedbackResponse, error) {
-
 	feedbackDomain := &domain.Feedback{
 		FeedbackType:   internal.ReceiverType(params.FeedbackType),
 		FeedbackToID:   params.FeedbackToID,

@@ -47,6 +47,5 @@ func (r GetFeedbackForPatientDoctorQuery) Execute(ctx context.Context, params pu
 	}
 
 	feedback.FeedbackParameter = *feedbackParameter
-
 	return feedback, nil
 }

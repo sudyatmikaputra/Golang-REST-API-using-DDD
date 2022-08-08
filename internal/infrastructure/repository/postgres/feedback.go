@@ -101,10 +101,7 @@ func (d *feedbackPostgres) InsertFeedback(ctx context.Context, feedback *reposit
 
 	feedback.ID, _ = uuid.NewRandom()
 
-	err := db.Create(feedback).Error
-	if err != nil {
-		return nil, err
-	}
+	_ = db.Create(feedback)
 
 	return feedback, nil
 }

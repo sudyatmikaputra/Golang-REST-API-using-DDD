@@ -42,11 +42,11 @@ func (r CreateReportForPatientToDoctorCommand) Execute(ctx context.Context, para
 	if report == nil {
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
+
 	reportParameter, err := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), string(internal.BahasaIndonesia))
 	if err != nil {
 		return nil, err
 	}
-
 	report.ReportParameter = *reportParameter
 
 	return report, nil

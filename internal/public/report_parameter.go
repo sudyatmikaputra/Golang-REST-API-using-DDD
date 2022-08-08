@@ -16,7 +16,8 @@ type CreateReportParameterRequest struct {
 	ReportType   string `json:"report_type" validate:"required,oneof=all doctor merchant medicplus"`
 	Name         string `json:"name" validate:"required, alpha"`
 	LanguageCode string `json:"language_code" validate:"required"`
-	IsDefault    bool   `json:"is_default" validate:"required"`
+	// IsDefault    bool   `json:"is_default" validate:"required"`
+	IsDefault bool `json:"is_default"`
 }
 
 type UpdateReportParameterRequest struct {
@@ -37,7 +38,7 @@ type ListReportParameterRequest struct {
 }
 
 type GetReportParameterRequest struct {
-	ID uuid.UUID `url_param:"id" validate:"required"`
+	ID uuid.UUID `qs:"id" validate:"required"`
 }
 
 type DeleteReportParameterRequest struct {
