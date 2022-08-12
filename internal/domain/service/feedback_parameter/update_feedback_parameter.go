@@ -13,38 +13,37 @@ import (
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
 )
 
-// UpdateFeedbackParameter updates feedback parameter data
 func (s *FeedbackParameterService) UpdateFeedbackParameter(ctx context.Context, params *public.UpdateFeedbackParameterRequest) (*public.FeedbackParameterResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
-	updatedFeedbackDomain := &domain.FeedbackParameter{}
-	updatedFeedbackRepo, err := s.repository.FindFeedbackParameterByID(ctx, params.ID)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
+	updatedFeedbackParameterRepo, err := s.repository.FindFeedbackParameterByID(ctx, params.ID)
 	if err != nil {
 		return nil, err
 	}
-	if updatedFeedbackRepo == nil {
+	if updatedFeedbackParameterRepo == nil {
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	updatedFeedbackDomain.FromRepositoryModel(updatedFeedbackRepo)
+	updatedFeedbackParameterDomain := &domain.FeedbackParameter{}
+	updatedFeedbackParameterDomain.FromRepositoryModel(updatedFeedbackParameterRepo)
 	if params.FeedbackType != "" {
-		updatedFeedbackDomain.FeedbackType = internal.ParameterType(params.FeedbackType)
+		updatedFeedbackParameterDomain.FeedbackType = internal.ParameterType(params.FeedbackType)
 	}
 	if params.Name != "" {
-		updatedFeedbackDomain.Name = params.Name
+		updatedFeedbackParameterDomain.Name = params.Name
 	}
 	if params.LanguageCode != "" {
-		updatedFeedbackDomain.LanguageCode = internal.LanguageCode(params.LanguageCode)
+		updatedFeedbackParameterDomain.LanguageCode = internal.LanguageCode(params.LanguageCode)
 	}
-	updatedFeedbackDomain.IsDefault = params.IsDefault
+	updatedFeedbackParameterDomain.IsDefault = params.IsDefault
+	updatedFeedbackParameterRepo.UpdatedBy = userLoggedInID
 
-	userLoggedInID := userLoggedIn["uuid"].(uuid.UUID)
-	updatedFeedbackRepo.UpdatedBy = userLoggedInID
-
-	updatedFeedbackRepo, err = s.repository.UpdateFeedbackParameter(ctx, updatedFeedbackRepo)
+	updatedFeedbackParameterRepo, err = s.repository.UpdateFeedbackParameter(ctx, updatedFeedbackParameterDomain.ToRepositoryModel())
 	if err != nil {
 		return nil, err
 	}
-	updatedFeedbackDomain.FromRepositoryModel(updatedFeedbackRepo)
+	updatedFeedbackParameterDomain.FromRepositoryModel(updatedFeedbackParameterRepo)
 
-	return updatedFeedbackDomain.ToPublicModel(), nil
+	return updatedFeedbackParameterDomain.ToPublicModel(), nil
 }

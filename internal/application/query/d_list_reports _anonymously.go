@@ -30,11 +30,17 @@ func NewListReportsForDoctorAnonymouslyQuery(
 
 func (r ListReportsForDoctorAnonymouslyQuery) Execute(ctx context.Context, params public.ListReportRequest) ([]public.AnonymousReportResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
-	if params.ReportType == string(internal.DoctorParameterType) && userLoggedIn["uuid"].(uuid.UUID) != params.ReportToID {
-		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
+	if params.ReportToID != uuid.Nil {
+		if params.ReportType == string(internal.DoctorParameterType) && userLoggedInID != params.ReportToID {
+			return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+		}
 	}
-	if params.ReportType != string(internal.DoctorParameterType) && userLoggedIn["uuid"].(uuid.UUID) != params.ReportFromID {
-		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+	if params.ReportToID != uuid.Nil {
+		if params.ReportType != string(internal.DoctorParameterType) && userLoggedInID != params.ReportFromID {
+			return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+		}
 	}
 
 	reports, err := r.reportService.ListReportsAnonymously(ctx, &params)
@@ -45,13 +51,16 @@ func (r ListReportsForDoctorAnonymouslyQuery) Execute(ctx context.Context, param
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	reportParameter, err := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
-	if err != nil {
-		return nil, err
-	}
+	reportParameter, _ := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
 	if reportParameter != nil {
-		for _, report := range reports {
-			report.ReportParameter = *reportParameter
+		for i := range reports {
+			reports[i].ReportParameter = public.ReportParameterResponse{
+				ID:           reportParameter.ID,
+				ReportType:   reportParameter.ReportType,
+				Name:         reportParameter.Name,
+				LanguageCode: reportParameter.LanguageCode,
+				IsDefault:    reportParameter.IsDefault,
+			}
 		}
 	}
 

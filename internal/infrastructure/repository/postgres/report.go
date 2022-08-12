@@ -80,7 +80,7 @@ func (s *reportPostgres) FindReportByID(ctx context.Context, reportID uuid.UUID)
 	}
 
 	report := repository.Report{}
-	err := db.First(&report, ` "deleted_at" IS NULL AND "id" = ?`, reportID).Error
+	err := db.First(&report, `"id" = ?`, reportID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}

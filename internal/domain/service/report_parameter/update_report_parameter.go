@@ -15,6 +15,7 @@ import (
 // UpdateReportParameter updates report parameter data
 func (s *ReportParameterService) UpdateReportParameter(ctx context.Context, params *public.UpdateReportParameterRequest) (*public.ReportParameterResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
 
 	updatedReportDomain := &domain.ReportParameter{}
 	updatedReportRepo, err := s.repository.FindReportParameterByID(ctx, params.ID)
@@ -37,10 +38,9 @@ func (s *ReportParameterService) UpdateReportParameter(ctx context.Context, para
 	}
 	updatedReportDomain.IsDefault = params.IsDefault
 
-	userLoggedInID := userLoggedIn["uuid"].(uuid.UUID)
 	updatedReportRepo.UpdatedBy = userLoggedInID
 
-	updatedReportRepo, err = s.repository.UpdateReportParameter(ctx, updatedReportRepo)
+	updatedReportRepo, err = s.repository.UpdateReportParameter(ctx, updatedReportDomain.ToRepositoryModel())
 	if err != nil {
 		return nil, err
 	}

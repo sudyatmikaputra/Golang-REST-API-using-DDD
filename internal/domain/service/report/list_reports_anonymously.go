@@ -25,6 +25,7 @@ func (s *ReportService) ListReportsAnonymously(ctx context.Context, params *publ
 		report := &domain.Report{}
 		report.FromRepositoryModel(_report)
 		anonymousReport := &public.AnonymousReportResponse{
+			ID:         report.ID,
 			ReportType: string(report.ReportType),
 			ReportToID: report.ReportToID,
 			Context:    string(report.Context),

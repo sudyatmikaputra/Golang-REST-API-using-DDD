@@ -15,6 +15,8 @@ import (
 // UpdateReport updates report data
 func (s *ReportService) UpdateReport(ctx context.Context, params *public.UpdateReportRequest) (*public.ReportResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
 	updatedReportDomain := &domain.Report{}
 	updatedReportRepo, err := s.repository.FindReportByID(ctx, params.ID)
 	if err != nil {
@@ -24,7 +26,7 @@ func (s *ReportService) UpdateReport(ctx context.Context, params *public.UpdateR
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	if userLoggedIn["uuid"].(uuid.UUID) != updatedReportRepo.ReportFromID {
+	if userLoggedInID != updatedReportRepo.ReportFromID {
 		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
 	}
 	updatedReportDomain.FromRepositoryModel(updatedReportRepo)

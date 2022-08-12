@@ -27,11 +27,17 @@ func NewCreateReportForPatientDoctorToMerchantCommand(
 }
 
 func (r CreateReportForPatientDoctorToMerchantCommand) Execute(ctx context.Context, params public.CreateReportRequest) (*public.ReportResponse, error) {
+	if params.ReportType != string(internal.ToMerchant) {
+		return nil, libError.New(internal.ErrInvalidParameterType, http.StatusBadRequest, internal.ErrInvalidParameterType.Error())
+	}
+	if params.Context != string(internal.Purchase) {
+		return nil, libError.New(internal.ErrInvalidContext, http.StatusBadRequest, internal.ErrInvalidContext.Error())
+	}
 	report, err := r.reportService.CreateReport(ctx, &public.CreateReportRequest{
-		ReportType:   string(internal.ToMerchant),
+		ReportType:   params.ReportType,
 		ReportToID:   params.ReportToID,
 		ReportFromID: params.ReportFromID,
-		Context:      string(internal.Purchase),
+		Context:      params.Context,
 		ContextID:    params.ContextID,
 		Notes:        params.Notes,
 	})
@@ -42,12 +48,18 @@ func (r CreateReportForPatientDoctorToMerchantCommand) Execute(ctx context.Conte
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	reportParameter, err := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), string(internal.BahasaIndonesia))
-	if err != nil {
-		return nil, err
+	reportParameter, _ := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), string(internal.BahasaIndonesia))
+	if reportParameter != nil {
+		report.ReportParameter = public.ReportParameterResponse{
+			ID:           reportParameter.ID,
+			ReportType:   reportParameter.ReportType,
+			Name:         reportParameter.Name,
+			LanguageCode: reportParameter.LanguageCode,
+			IsDefault:    reportParameter.IsDefault,
+		}
+	} else {
+		return nil, libError.New(internal.ErrParameterNotFound, http.StatusBadRequest, internal.ErrParameterNotFound.Error())
 	}
-
-	report.ReportParameter = *reportParameter
 
 	return report, nil
 }

@@ -26,13 +26,12 @@ type AnonymousReportResponse struct {
 }
 
 type CreateReportRequest struct {
-	ReportType      string                  `json:"report_type" validate:"required"`
-	ReportToID      uuid.UUID               `json:"report_to_id" validate:"required"`
-	ReportFromID    uuid.UUID               `json:"report_from_id" validate:"required"`
-	ReportParameter ReportParameterResponse `json:"report_parameter" validate:"required"`
-	Context         string                  `json:"context" validate:"required"`
-	ContextID       uuid.UUID               `json:"context_id" validate:"required"`
-	Notes           string                  `json:"notes" validate:"required"`
+	ReportType   string    `json:"report_type" validate:"required,oneof=all doctor merchant medicplus"`
+	ReportToID   uuid.UUID `json:"report_to_id" validate:"required"`
+	ReportFromID uuid.UUID `json:"report_from_id" validate:"required"`
+	Context      string    `json:"context" validate:"required"`
+	ContextID    uuid.UUID `json:"context_id" validate:"required"`
+	Notes        string    `json:"notes" validate:"required"`
 }
 
 type UpdateReportRequest struct {
@@ -45,13 +44,13 @@ type ListReportRequest struct {
 	Page         int       `qs:"page"`
 	Limit        int       `qs:"limit"`
 	ReportFromID uuid.UUID `qs:"report_from_id"`
-	ReportType   string    `json:"report_type" validate:"required"`
 	ReportToID   uuid.UUID `qs:"report_to_id"`
-	LanguageCode string    `json:"language_code" validate:"required,oneof=id en"`
+	ReportType   string    `qs:"report_type" validate:"required,oneof=all doctor merchant medicplus"`
+	LanguageCode string    `qs:"language_code" validate:"required,oneof=id en"`
 }
 
 type GetReportRequest struct {
-	ID           uuid.UUID `qs:"id"`
+	ID           uuid.UUID `qs:"id" validate:"required"`
 	LanguageCode string    `qs:"language_code" validate:"required,oneof=id en"`
 }
 

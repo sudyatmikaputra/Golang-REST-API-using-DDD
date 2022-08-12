@@ -66,8 +66,8 @@ func New(
 			CreateFeedbackForPatientDoctorToMerchant:  command.NewCreateFeedbackForPatientDoctorToMerchantCommand(feedbackService, feedbackParameterService),
 			CreateReportForPatientDoctorToMedicplus:   command.NewCreateReportForPatientDoctorToMedicplusCommand(reportService, reportParameterService),
 			CreateReportForPatientDoctorToMerchant:    command.NewCreateReportForPatientDoctorToMerchantCommand(reportService, reportParameterService),
-			UpdateFeedbackForPatientDoctor:            command.NewUpdateFeedbackForPatientDoctorCommand(feedbackService),
-			UpdateReportForPatientDoctor:              command.NewUpdateReportForPatientDoctorCommand(reportService),
+			UpdateFeedbackForPatientDoctor:            command.NewUpdateFeedbackForPatientDoctorCommand(feedbackService, feedbackParameterService),
+			UpdateReportForPatientDoctor:              command.NewUpdateReportForPatientDoctorCommand(reportService, reportParameterService),
 		},
 		Queries: Queries{
 			GetFeedbackParameterForAdmin:      query.NewGetFeedbackParameterForAdminQuery(feedbackParameterService),

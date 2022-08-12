@@ -20,7 +20,6 @@ func NewDeleteFeedbackParameterForAdminCommand(
 }
 
 func (r DeleteFeedbackParameterForAdminCommand) Execute(ctx context.Context, params public.DeleteFeedbackParameterRequest) error {
-
 	err := r.parameterService.DeleteFeedbackParameter(ctx, &params)
 	if err != nil {
 		return err

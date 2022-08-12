@@ -18,6 +18,7 @@ func (s *ReportService) CreateReport(ctx context.Context, params *public.CreateR
 		ReportFromID: params.ReportFromID,
 		Context:      internal.ReportContext(params.Context),
 		ContextID:    params.ContextID,
+		Notes:        params.Notes,
 	}
 	reportRepo := report.ToRepositoryModel()
 	insertedRepo, err := s.repository.InsertReport(ctx, reportRepo)

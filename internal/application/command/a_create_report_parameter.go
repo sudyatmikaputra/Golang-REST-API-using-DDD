@@ -2,12 +2,9 @@ package command
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/medicplus-inc/medicplus-feedback/internal"
 	reportParameterDomainService "github.com/medicplus-inc/medicplus-feedback/internal/domain/service/report_parameter"
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
-	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
 type CreateReportParameterForAdminCommand struct {
@@ -26,9 +23,6 @@ func (r CreateReportParameterForAdminCommand) Execute(ctx context.Context, param
 	reportParameter, err := r.reportParameterService.CreateReportParameter(ctx, &params)
 	if err != nil {
 		return nil, err
-	}
-	if reportParameter == nil {
-		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
 	return reportParameter, nil

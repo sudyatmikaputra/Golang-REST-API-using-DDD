@@ -14,6 +14,8 @@ import (
 //DeleteReportParameter deleting report category
 func (s *ReportParameterService) DeleteReportParameter(ctx context.Context, params *public.DeleteReportParameterRequest) error {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
 	reportParameterRepo, err := s.repository.FindReportParameterByID(ctx, params.ID)
 	if err != nil {
 		return err
@@ -22,7 +24,6 @@ func (s *ReportParameterService) DeleteReportParameter(ctx context.Context, para
 		return libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	userLoggedInID := userLoggedIn["uuid"].(uuid.UUID)
 	reportParameterRepo.DeletedBy = &userLoggedInID
 
 	err = s.repository.DeleteReportParameter(ctx, reportParameterRepo)

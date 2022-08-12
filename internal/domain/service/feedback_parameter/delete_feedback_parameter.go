@@ -14,6 +14,7 @@ import (
 //DeleteFeedbackParameter deleting feedback parameter
 func (s *FeedbackParameterService) DeleteFeedbackParameter(ctx context.Context, params *public.DeleteFeedbackParameterRequest) error {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
 
 	feedbackParameter, err := s.repository.FindFeedbackParameterByID(ctx, params.ID)
 	if err != nil {
@@ -23,7 +24,6 @@ func (s *FeedbackParameterService) DeleteFeedbackParameter(ctx context.Context, 
 		return libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	userLoggedInID := userLoggedIn["uuid"].(uuid.UUID)
 	feedbackParameter.DeletedBy = &userLoggedInID
 	err = s.repository.DeleteFeedbackParameter(ctx, feedbackParameter)
 	if err != nil {

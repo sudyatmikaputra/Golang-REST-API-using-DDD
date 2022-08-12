@@ -17,6 +17,7 @@ type Report struct {
 	ReportParameterID uuid.UUID              `json:"report_parameter_id" gorm:"not null"`
 	Context           internal.ReportContext `json:"context"`
 	ContextID         uuid.UUID              `json:"context_id"`
+	Notes             string                 `json:"notes"`
 	CreatedAt         time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
 	UpdatedAt         time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`
 }

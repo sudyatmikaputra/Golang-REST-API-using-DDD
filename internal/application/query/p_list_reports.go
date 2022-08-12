@@ -30,7 +30,9 @@ func NewListReportsForPatientQuery(
 
 func (r ListReportsForPatientQuery) Execute(ctx context.Context, params public.ListReportRequest) ([]public.ReportResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
-	if userLoggedIn["uuid"].(uuid.UUID) != params.ReportFromID {
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
+	if userLoggedInID != params.ReportFromID {
 		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
 	}
 
@@ -42,13 +44,16 @@ func (r ListReportsForPatientQuery) Execute(ctx context.Context, params public.L
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	reportParameter, err := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
-	if err != nil {
-		return nil, err
-	}
+	reportParameter, _ := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
 	if reportParameter != nil {
-		for _, report := range reports {
-			report.ReportParameter = *reportParameter
+		for i := range reports {
+			reports[i].ReportParameter = public.ReportParameterResponse{
+				ID:           reportParameter.ID,
+				ReportType:   reportParameter.ReportType,
+				Name:         reportParameter.Name,
+				LanguageCode: reportParameter.LanguageCode,
+				IsDefault:    reportParameter.IsDefault,
+			}
 		}
 	}
 

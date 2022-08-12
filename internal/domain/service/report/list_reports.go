@@ -22,9 +22,10 @@ func (s *ReportService) ListReports(ctx context.Context, params *public.ListRepo
 
 	result := []public.ReportResponse{}
 	for _, _report := range reportRepo {
-		report := &domain.Report{}
-		report.FromRepositoryModel(_report)
-		reportPublicModel := report.ToPublicModel()
+		reportDomain := &domain.Report{}
+		reportDomain.FromRepositoryModel(_report)
+
+		reportPublicModel := reportDomain.ToPublicModel()
 		result = append(result, *reportPublicModel)
 	}
 

@@ -35,13 +35,16 @@ func (r ListReportsForAdminQuery) Execute(ctx context.Context, params public.Lis
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	reportParameter, err := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
-	if err != nil {
-		return nil, err
-	}
+	reportParameter, _ := r.reportParameterService.GetReportParameterByReportType(ctx, internal.ParameterType(params.ReportType), params.LanguageCode)
 	if reportParameter != nil {
-		for _, report := range reports {
-			report.ReportParameter = *reportParameter
+		for i := range reports {
+			reports[i].ReportParameter = public.ReportParameterResponse{
+				ID:           reportParameter.ID,
+				ReportType:   reportParameter.ReportType,
+				Name:         reportParameter.Name,
+				LanguageCode: reportParameter.LanguageCode,
+				IsDefault:    reportParameter.IsDefault,
+			}
 		}
 	}
 

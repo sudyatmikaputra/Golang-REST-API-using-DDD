@@ -15,6 +15,7 @@ import (
 // UpdateFeedback updates feedback data
 func (s *FeedbackService) UpdateFeedback(ctx context.Context, params *public.UpdateFeedbackRequest) (*public.FeedbackResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
 
 	updatedFeedbackRepo, err := s.repository.FindFeedbackByID(ctx, params.ID)
 	if err != nil {
@@ -24,7 +25,7 @@ func (s *FeedbackService) UpdateFeedback(ctx context.Context, params *public.Upd
 		return nil, libError.New(internal.ErrNotFound, http.StatusNotFound, internal.ErrNotFound.Error())
 	}
 
-	if userLoggedIn["uuid"].(uuid.UUID) != updatedFeedbackRepo.FeedbackFromID {
+	if userLoggedInID != updatedFeedbackRepo.FeedbackFromID {
 		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
 	}
 	updatedFeedbackDomain := &domain.Feedback{}

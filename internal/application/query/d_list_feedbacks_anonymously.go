@@ -30,11 +30,17 @@ func NewListFeedbacksForDoctorAnonymouslyQuery(
 
 func (r ListFeedbacksForDoctorAnonymouslyQuery) Execute(ctx context.Context, params public.ListFeedbackRequest) ([]public.AnonymousFeedbackResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
-	if params.FeedbackType == string(internal.DoctorParameterType) && userLoggedIn["uuid"].(uuid.UUID) != params.FeedbackToID {
-		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
+	if params.FeedbackToID != uuid.Nil {
+		if params.FeedbackType == string(internal.DoctorParameterType) && userLoggedInID != params.FeedbackToID {
+			return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+		}
 	}
-	if params.FeedbackType != string(internal.DoctorParameterType) && userLoggedIn["uuid"].(uuid.UUID) != params.FeedbackFromID {
-		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+	if params.FeedbackFromID != uuid.Nil {
+		if params.FeedbackType != string(internal.DoctorParameterType) && userLoggedInID != params.FeedbackFromID {
+			return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
+		}
 	}
 
 	feedbacks, err := r.feedbackService.ListFeedbacksAnonymously(ctx, &params)
@@ -45,13 +51,16 @@ func (r ListFeedbacksForDoctorAnonymouslyQuery) Execute(ctx context.Context, par
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	feedbackParameter, err := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
-	if err != nil {
-		return nil, err
-	}
+	feedbackParameter, _ := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
 	if feedbackParameter != nil {
-		for _, feedback := range feedbacks {
-			feedback.FeedbackParameter = *feedbackParameter
+		for i := range feedbacks {
+			feedbacks[i].FeedbackParameter = public.FeedbackParameterResponse{
+				ID:           feedbackParameter.ID,
+				FeedbackType: feedbackParameter.FeedbackType,
+				Name:         feedbackParameter.Name,
+				LanguageCode: feedbackParameter.LanguageCode,
+				IsDefault:    feedbackParameter.IsDefault,
+			}
 		}
 	}
 

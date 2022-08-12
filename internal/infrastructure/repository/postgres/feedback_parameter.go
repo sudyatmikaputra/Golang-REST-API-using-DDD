@@ -68,7 +68,7 @@ func (s *feedbackParameterPostgres) FindFeedbackParameterByID(ctx context.Contex
 	}
 
 	feedbackParameter := repository.FeedbackParameter{}
-	err := db.First(&feedbackParameter, `"deleted_at" IS NULL AND id" = ? `, feedbackParameterID).Error
+	err := db.First(&feedbackParameter, `"deleted_at" IS NULL AND "id" = ? `, feedbackParameterID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}

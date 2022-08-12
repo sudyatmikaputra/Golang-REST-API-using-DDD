@@ -13,11 +13,10 @@ type FeedbackParameterResponse struct {
 }
 
 type CreateFeedbackParameterRequest struct {
-	FeedbackType string `json:"feedback_type" validate:"required"`
+	FeedbackType string `json:"feedback_type" validate:"required,oneof=all doctor merchant medicplus"`
 	Name         string `json:"name" validate:"required"`
 	LanguageCode string `json:"language_code" validate:"required,oneof=id en"`
-	// IsDefault    bool   `json:"is_default" validate:"required"`
-	IsDefault bool `json:"is_default"`
+	IsDefault    bool   `json:"is_default"`
 }
 
 type UpdateFeedbackParameterRequest struct {
@@ -38,9 +37,9 @@ type ListFeedbackParameterRequest struct {
 }
 
 type GetFeedbackParameterRequest struct {
-	ID uuid.UUID `qs:"id" validate:"required,uuid4"`
+	ID uuid.UUID `qs:"id" validate:"required"`
 }
 
 type DeleteFeedbackParameterRequest struct {
-	ID uuid.UUID `json:"id" validate:"required,uuid4"`
+	ID uuid.UUID `qs:"id" validate:"required"`
 }

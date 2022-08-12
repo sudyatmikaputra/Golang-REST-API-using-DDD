@@ -29,7 +29,7 @@ func CompileRoute(
 		r.Get("/feedback-parameters", listFeedbackParameters(opts)) //A
 
 		//Report
-		r.Get("/report/{id}", getReport(opts)) //A
+		r.Get("/report", getReport(opts)) //A
 
 		//Report Parameter
 		r.Get("/report-parameters", listReportParameters(opts)) //A
@@ -42,19 +42,19 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback Parameter
-		r.Post("/feedback-parameter", createFeedbackParameterForAdmin(opts))        //A
-		r.Get("/feedback-parameter/{id}", getFeedbackParameterForAdmin(opts))       //A
-		r.Put("/feedback-parameter", updateFeedbackParameterForAdmin(opts))         //A
-		r.Delete("/feedback-parameter/{id}", deleteFeedbackParameterForAdmin(opts)) //A
+		r.Post("/feedback-parameter", createFeedbackParameterForAdmin(opts))   //A
+		r.Get("/feedback-parameter", getFeedbackParameterForAdmin(opts))       //A
+		r.Put("/feedback-parameter", updateFeedbackParameterForAdmin(opts))    //A
+		r.Delete("/feedback-parameter", deleteFeedbackParameterForAdmin(opts)) //A
 
 		//Feedback
 		r.Get("/feedbacks/admin", listFeedbacksForAdmin(opts)) //A
 
 		//Report Parameter
-		r.Post("/report-parameter", createReportParameterForAdmin(opts))        //A
-		r.Get("/report-parameter/{id}", getReportParameterForAdmin(opts))       //A
-		r.Put("/report-parameter", updateReportParameterForAdmin(opts))         //A
-		r.Delete("/report-parameter/{id}", deleteReportParameterForAdmin(opts)) //A
+		r.Post("/report-parameter", createReportParameterForAdmin(opts))   //A
+		r.Get("/report-parameter", getReportParameterForAdmin(opts))       //A
+		r.Put("/report-parameter", updateReportParameterForAdmin(opts))    //A
+		r.Delete("/report-parameter", deleteReportParameterForAdmin(opts)) //A
 
 		//Report
 		r.Get("/reports/admin", listReportsForAdmin(opts)) //A

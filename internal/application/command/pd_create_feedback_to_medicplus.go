@@ -27,9 +27,11 @@ func NewCreateFeedbackForPatientDoctorToMedicplusCommand(
 }
 
 func (r CreateFeedbackForPatientDoctorToMedicplusCommand) Execute(ctx context.Context, params public.CreateFeedbackRequest) (*public.FeedbackResponse, error) {
-
+	if params.FeedbackType != string(internal.ToMedicplus) {
+		return nil, libError.New(internal.ErrInvalidParameterType, http.StatusBadRequest, internal.ErrInvalidParameterType.Error())
+	}
 	feedback, err := r.feedbackService.CreateFeedback(ctx, &public.CreateFeedbackRequest{
-		FeedbackType:   string(internal.ToMedicplus),
+		FeedbackType:   params.FeedbackType,
 		FeedbackToID:   params.FeedbackToID,
 		FeedbackFromID: params.FeedbackFromID,
 		FeedbackValue:  params.FeedbackValue,
@@ -42,12 +44,18 @@ func (r CreateFeedbackForPatientDoctorToMedicplusCommand) Execute(ctx context.Co
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	feedbackParameter, err := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(feedback.FeedbackType), string(internal.BahasaIndonesia))
-	if err != nil {
-		return nil, err
+	feedbackParameter, _ := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(feedback.FeedbackType), string(internal.BahasaIndonesia))
+	if feedbackParameter != nil {
+		feedback.FeedbackParameter = public.FeedbackParameterResponse{
+			ID:           feedbackParameter.ID,
+			FeedbackType: feedbackParameter.FeedbackType,
+			Name:         feedbackParameter.Name,
+			LanguageCode: feedbackParameter.Name,
+			IsDefault:    feedbackParameter.IsDefault,
+		}
+	} else {
+		return nil, libError.New(internal.ErrParameterNotFound, http.StatusBadRequest, internal.ErrParameterNotFound.Error())
 	}
-
-	feedback.FeedbackParameter = *feedbackParameter
 
 	return feedback, nil
 }

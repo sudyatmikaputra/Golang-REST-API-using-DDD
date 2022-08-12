@@ -12,17 +12,17 @@ import (
 )
 
 type ListFeedbacksForAdminQuery struct {
-	feedbackService  feedbackDomainService.FeedbackServiceInterface
-	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
+	feedbackService          feedbackDomainService.FeedbackServiceInterface
+	feedbackParameterService feedbackParameterDomainService.FeedbackParameterServiceInterface
 }
 
 func NewListFeedbacksForAdminQuery(
 	feedbackService feedbackDomainService.FeedbackServiceInterface,
-	parameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
+	feedbackParameterService feedbackParameterDomainService.FeedbackParameterServiceInterface,
 ) ListFeedbacksForAdminQuery {
 	return ListFeedbacksForAdminQuery{
-		feedbackService:  feedbackService,
-		parameterService: parameterService,
+		feedbackService:          feedbackService,
+		feedbackParameterService: feedbackParameterService,
 	}
 }
 
@@ -35,13 +35,16 @@ func (r ListFeedbacksForAdminQuery) Execute(ctx context.Context, params public.L
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	feedbackParameter, err := r.parameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
-	if err != nil {
-		return nil, err
-	}
+	feedbackParameter, _ := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
 	if feedbackParameter != nil {
-		for _, feedback := range feedbacks {
-			feedback.FeedbackParameter = *feedbackParameter
+		for i := range feedbacks {
+			feedbacks[i].FeedbackParameter = public.FeedbackParameterResponse{
+				ID:           feedbackParameter.ID,
+				FeedbackType: feedbackParameter.FeedbackType,
+				Name:         feedbackParameter.Name,
+				LanguageCode: feedbackParameter.LanguageCode,
+				IsDefault:    feedbackParameter.IsDefault,
+			}
 		}
 	}
 

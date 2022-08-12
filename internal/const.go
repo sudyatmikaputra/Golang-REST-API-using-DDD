@@ -31,6 +31,9 @@ var (
 	ErrAddressOneIsRequired        = errors.New("failed to delete address. one address is required")
 	ErrInvalidResponse             = errors.New("invalid response")
 	ErrInvalidRequest              = errors.New("invalid_request")
+	ErrParameterNotFound           = errors.New("parameter type is not found")
+	ErrInvalidParameterType        = errors.New("invalid parameter type input")
+	ErrInvalidContext              = errors.New("invalid context input")
 )
 
 type ParameterType string

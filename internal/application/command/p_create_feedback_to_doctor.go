@@ -27,8 +27,11 @@ func NewCreateFeedbackForPatientToDoctorCommand(
 }
 
 func (r CreateFeedbackForPatientToDoctorCommand) Execute(ctx context.Context, params public.CreateFeedbackRequest) (*public.FeedbackResponse, error) {
+	if params.FeedbackType != string(internal.ToDoctor) {
+		return nil, libError.New(internal.ErrInvalidParameterType, http.StatusBadRequest, internal.ErrInvalidParameterType.Error())
+	}
 	feedback, err := r.feedbackService.CreateFeedback(ctx, &public.CreateFeedbackRequest{
-		FeedbackType:   string(internal.ToDoctor),
+		FeedbackType:   params.FeedbackType,
 		FeedbackToID:   params.FeedbackToID,
 		FeedbackFromID: params.FeedbackFromID,
 		FeedbackValue:  params.FeedbackValue,
@@ -50,6 +53,8 @@ func (r CreateFeedbackForPatientToDoctorCommand) Execute(ctx context.Context, pa
 			LanguageCode: feedbackParameter.Name,
 			IsDefault:    feedbackParameter.IsDefault,
 		}
+	} else {
+		return nil, libError.New(internal.ErrParameterNotFound, http.StatusBadRequest, internal.ErrParameterNotFound.Error())
 	}
 
 	return feedback, nil

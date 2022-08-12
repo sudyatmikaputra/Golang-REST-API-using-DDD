@@ -32,7 +32,9 @@ func NewListFeedbacksForPatientQuery(
 
 func (r ListFeedbacksForPatientQuery) Execute(ctx context.Context, params public.ListFeedbackRequest) ([]public.FeedbackResponse, error) {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
-	if userLoggedIn["uuid"].(uuid.UUID) != params.FeedbackFromID {
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
+	if userLoggedInID != params.FeedbackFromID {
 		return nil, libError.New(internal.ErrNotAuthorized, http.StatusUnauthorized, internal.ErrNotAuthorized.Error())
 	}
 	feedbacks, err := r.feedbackService.ListFeedbacks(ctx, &params)
@@ -43,14 +45,16 @@ func (r ListFeedbacksForPatientQuery) Execute(ctx context.Context, params public
 		return nil, libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
 	}
 
-	feedbackParameter, err := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
-	if err != nil {
-		return nil, err
-	}
-
+	feedbackParameter, _ := r.feedbackParameterService.GetFeedbackParameterByParameterType(ctx, internal.ParameterType(params.FeedbackType), params.LanguageCode)
 	if feedbackParameter != nil {
-		for _, feedback := range feedbacks {
-			feedback.FeedbackParameter = *feedbackParameter
+		for i := range feedbacks {
+			feedbacks[i].FeedbackParameter = public.FeedbackParameterResponse{
+				ID:           feedbackParameter.ID,
+				FeedbackType: feedbackParameter.FeedbackType,
+				Name:         feedbackParameter.Name,
+				LanguageCode: feedbackParameter.LanguageCode,
+				IsDefault:    feedbackParameter.IsDefault,
+			}
 		}
 	}
 
