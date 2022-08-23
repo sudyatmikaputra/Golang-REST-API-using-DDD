@@ -25,11 +25,10 @@ type AnonymousFeedbackResponse struct {
 }
 
 type CreateFeedbackRequest struct {
-	FeedbackType   string    `json:"feedback_type" validate:"required,oneof=all doctor merchant medicplus"`
-	FeedbackToID   uuid.UUID `json:"feedback_to_id" validate:"required"`
-	FeedbackFromID uuid.UUID `json:"feedback_from_id" validate:"required"`
-	FeedbackValue  int       `json:"feedback_value" validate:"required"`
-	Notes          string    `json:"notes" validate:"required"`
+	FeedbackType  string    `json:"feedback_type" validate:"required,oneof=all doctor merchant medicplus"`
+	FeedbackToID  uuid.UUID `json:"feedback_to_id" validate:"required"`
+	FeedbackValue int       `json:"feedback_value" validate:"required"`
+	Notes         string    `json:"notes" validate:"required"`
 }
 
 type UpdateFeedbackRequest struct {

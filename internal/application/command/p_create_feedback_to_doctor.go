@@ -31,11 +31,10 @@ func (r CreateFeedbackForPatientToDoctorCommand) Execute(ctx context.Context, pa
 		return nil, libError.New(internal.ErrInvalidParameterType, http.StatusBadRequest, internal.ErrInvalidParameterType.Error())
 	}
 	feedback, err := r.feedbackService.CreateFeedback(ctx, &public.CreateFeedbackRequest{
-		FeedbackType:   params.FeedbackType,
-		FeedbackToID:   params.FeedbackToID,
-		FeedbackFromID: params.FeedbackFromID,
-		FeedbackValue:  params.FeedbackValue,
-		Notes:          params.Notes,
+		FeedbackType:  params.FeedbackType,
+		FeedbackToID:  params.FeedbackToID,
+		FeedbackValue: params.FeedbackValue,
+		Notes:         params.Notes,
 	})
 	if err != nil {
 		return nil, err

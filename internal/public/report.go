@@ -26,12 +26,11 @@ type AnonymousReportResponse struct {
 }
 
 type CreateReportRequest struct {
-	ReportType   string    `json:"report_type" validate:"required,oneof=all doctor merchant medicplus"`
-	ReportToID   uuid.UUID `json:"report_to_id" validate:"required"`
-	ReportFromID uuid.UUID `json:"report_from_id" validate:"required"`
-	Context      string    `json:"context" validate:"required"`
-	ContextID    uuid.UUID `json:"context_id" validate:"required"`
-	Notes        string    `json:"notes" validate:"required"`
+	ReportType string    `json:"report_type" validate:"required,oneof=all doctor merchant medicplus"`
+	ReportToID uuid.UUID `json:"report_to_id" validate:"required"`
+	Context    string    `json:"context" validate:"required"`
+	ContextID  uuid.UUID `json:"context_id" validate:"required"`
+	Notes      string    `json:"notes" validate:"required"`
 }
 
 type UpdateReportRequest struct {

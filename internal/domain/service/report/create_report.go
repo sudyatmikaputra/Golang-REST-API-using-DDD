@@ -4,18 +4,23 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/medicplus-inc/medicplus-feedback/internal"
 	"github.com/medicplus-inc/medicplus-feedback/internal/domain"
+	"github.com/medicplus-inc/medicplus-feedback/internal/global"
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
 // CreateReport creates a new report
 func (s *ReportService) CreateReport(ctx context.Context, params *public.CreateReportRequest) (*public.ReportResponse, error) {
+	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
+	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
+
 	report := &domain.Report{
 		ReportType:   internal.ReceiverType(params.ReportType),
 		ReportToID:   params.ReportToID,
-		ReportFromID: params.ReportFromID,
+		ReportFromID: userLoggedInID,
 		Context:      internal.ReportContext(params.Context),
 		ContextID:    params.ContextID,
 		Notes:        params.Notes,

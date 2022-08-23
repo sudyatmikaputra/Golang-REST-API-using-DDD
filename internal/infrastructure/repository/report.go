@@ -11,12 +11,12 @@ import (
 
 type Report struct {
 	ID                uuid.UUID              `json:"id" gorm:"primaryKey,not null"`
-	ReportType        internal.ReceiverType  `json:"report_type" gorm:"not null"`
-	ReportToID        uuid.UUID              `json:"report_to_id" gorm:"not null"`
-	ReportFromID      uuid.UUID              `json:"report_from_id" gorm:"not null"`
-	ReportParameterID uuid.UUID              `json:"report_parameter_id" gorm:"not null"`
+	ReportType        internal.ReceiverType  `json:"report_type" gorm:"index:idx_report_report_type,not null"`
+	ReportToID        uuid.UUID              `json:"report_to_id" gorm:"index:idx_report_report_to_id,not null"`
+	ReportFromID      uuid.UUID              `json:"report_from_id" gorm:"index:idx_report_report_from_id,not null"`
+	ReportParameterID uuid.UUID              `json:"report_parameter_id" gorm:"index:idx_report_report_parameter_id,not null"`
 	Context           internal.ReportContext `json:"context"`
-	ContextID         uuid.UUID              `json:"context_id"`
+	ContextID         uuid.UUID              `json:"context_id" gorm:"index:idx_report_context_id"`
 	Notes             string                 `json:"notes"`
 	CreatedAt         time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
 	UpdatedAt         time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`

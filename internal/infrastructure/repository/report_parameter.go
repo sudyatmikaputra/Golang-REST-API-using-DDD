@@ -11,9 +11,9 @@ import (
 
 type ReportParameter struct {
 	ID           uuid.UUID              `json:"id" gorm:"primaryKey,not null"`
-	ReportType   internal.ParameterType `json:"report_type" gorm:"not null"`
-	Name         string                 `json:"name" gorm:"index:idx_report_name,not null"`
-	LanguageCode internal.LanguageCode  `json:"language_code" gorm:"index:idx_report_language_code,not null"`
+	ReportType   internal.ParameterType `json:"report_type" gorm:"index:idx_report_parameter_report_type,not null"`
+	Name         string                 `json:"name" gorm:"index:idx_report_parameter_name,not null"`
+	LanguageCode internal.LanguageCode  `json:"language_code" gorm:"index:idx_report_parameter_language_code,not null"`
 	IsDefault    bool                   `json:"is_default" gorm:"not null"`
 	CreatedBy    uuid.UUID              `json:"created_by" gorm:"not null"`
 	CreatedAt    time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`

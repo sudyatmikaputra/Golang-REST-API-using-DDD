@@ -34,12 +34,11 @@ func (r CreateReportForPatientDoctorToMedicplusCommand) Execute(ctx context.Cont
 		return nil, libError.New(internal.ErrInvalidContext, http.StatusBadRequest, internal.ErrInvalidContext.Error())
 	}
 	report, err := r.reportService.CreateReport(ctx, &public.CreateReportRequest{
-		ReportType:   params.ReportType,
-		ReportToID:   params.ReportToID,
-		ReportFromID: params.ReportFromID,
-		Context:      params.Context,
-		ContextID:    params.ContextID,
-		Notes:        params.Notes,
+		ReportType: params.ReportType,
+		ReportToID: params.ReportToID,
+		Context:    params.Context,
+		ContextID:  params.ContextID,
+		Notes:      params.Notes,
 	})
 	if err != nil {
 		return nil, err

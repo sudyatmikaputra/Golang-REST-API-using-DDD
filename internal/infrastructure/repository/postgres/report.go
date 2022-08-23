@@ -31,7 +31,7 @@ func (s *reportPostgres) FindAllReports(ctx context.Context, params *public.List
 	args := []interface{}{}
 	where := ``
 	if params.Search != "" {
-		where += ` AND "notes" ILIKE ?`
+		where += ` "notes" ILIKE ?`
 		args = append(args, "%"+params.Search+"%")
 	}
 	if params.ReportType != "" {
