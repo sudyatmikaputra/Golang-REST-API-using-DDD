@@ -18,9 +18,8 @@ func Authenticate(next http.Handler) http.Handler {
 		if r.Method == http.MethodGet {
 			csrfToken, err := authentication.GenerateToken()
 			if err != nil {
-				log.Println("Errr while generating CSRF Token: ", err)
+				log.Println("Error while generating CSRF Token: ", err)
 			}
-			log.Println("Token", csrfToken)
 
 			w.Header().Add("X-CSRF-Token", csrfToken)
 		} else {

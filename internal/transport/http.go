@@ -26,13 +26,13 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback Parameter
-		r.Get("/feedback-parameters", listFeedbackParameters(opts)) //A
+		r.Get("/feedback-parameters", listFeedbackParameters(opts))
 
 		//Report
-		r.Get("/report", getReport(opts)) //A
+		r.Get("/report", getReport(opts))
 
 		//Report Parameter
-		r.Get("/report-parameters", listReportParameters(opts)) //A
+		r.Get("/report-parameters", listReportParameters(opts))
 
 	})
 
@@ -42,22 +42,22 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback Parameter
-		r.Post("/feedback-parameter", createFeedbackParameterForAdmin(opts))   //A
-		r.Get("/feedback-parameter", getFeedbackParameterForAdmin(opts))       //A
-		r.Put("/feedback-parameter", updateFeedbackParameterForAdmin(opts))    //A
-		r.Delete("/feedback-parameter", deleteFeedbackParameterForAdmin(opts)) //A
+		r.Post("/feedback-parameter", createFeedbackParameterForAdmin(opts))
+		r.Get("/feedback-parameter", getFeedbackParameterForAdmin(opts))
+		r.Put("/feedback-parameter", updateFeedbackParameterForAdmin(opts))
+		r.Delete("/feedback-parameter", deleteFeedbackParameterForAdmin(opts))
 
 		//Feedback
-		r.Get("/feedbacks/admin", listFeedbacksForAdmin(opts)) //A
+		r.Get("/feedbacks/admin", listFeedbacksForAdmin(opts))
 
 		//Report Parameter
-		r.Post("/report-parameter", createReportParameterForAdmin(opts))   //A
-		r.Get("/report-parameter", getReportParameterForAdmin(opts))       //A
-		r.Put("/report-parameter", updateReportParameterForAdmin(opts))    //A
-		r.Delete("/report-parameter", deleteReportParameterForAdmin(opts)) //A
+		r.Post("/report-parameter", createReportParameterForAdmin(opts))
+		r.Get("/report-parameter", getReportParameterForAdmin(opts))
+		r.Put("/report-parameter", updateReportParameterForAdmin(opts))
+		r.Delete("/report-parameter", deleteReportParameterForAdmin(opts))
 
 		//Report
-		r.Get("/reports/admin", listReportsForAdmin(opts)) //A
+		r.Get("/reports/admin", listReportsForAdmin(opts))
 
 	})
 
@@ -67,10 +67,10 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Get("/feedbacks/doctor", listFeedbacksForDoctorAnonymously(opts)) //A
+		r.Get("/feedbacks/doctor", listFeedbacksForDoctorAnonymously(opts))
 
 		//Report
-		r.Get("/reports/doctor", listReportsForDoctorAnonymously(opts)) //A
+		r.Get("/reports/doctor", listReportsForDoctorAnonymously(opts))
 
 	})
 
@@ -80,12 +80,12 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Post("/feedback-doctor", createFeedbackForPatientToDoctor(opts)) //A
-		r.Get("/feedbacks/patient", listFeedbacksForPatient(opts))         //A
+		r.Post("/feedback-doctor", createFeedbackForPatientToDoctor(opts))
+		r.Get("/feedbacks/patient", listFeedbacksForPatient(opts))
 
 		//Report
-		r.Post("/report-doctor", createReportForPatientToDoctor(opts)) //A
-		r.Get("/reports/patient", listReportsForPatient(opts))         //A
+		r.Post("/report-doctor", createReportForPatientToDoctor(opts))
+		r.Get("/reports/patient", listReportsForPatient(opts))
 
 	})
 
@@ -95,15 +95,15 @@ func CompileRoute(
 		r.Use(jwtauth.Authenticator)
 
 		//Feedback
-		r.Post("/feedback-medicplus", createFeedbackForPatientDoctorToMedicplus(opts)) //A
-		r.Post("/feedback-merchant", createFeedbackForPatientDoctorToMerchant(opts))   //A
-		r.Get("/feedback", getFeedbackForPatientDoctor(opts))                          //A
-		r.Put("/feedback", updateFeedbackForPatientDoctor(opts))                       //A
+		r.Post("/feedback-medicplus", createFeedbackForPatientDoctorToMedicplus(opts))
+		r.Post("/feedback-merchant", createFeedbackForPatientDoctorToMerchant(opts))
+		r.Get("/feedback", getFeedbackForPatientDoctor(opts))
+		r.Put("/feedback", updateFeedbackForPatientDoctor(opts))
 
 		//Report
-		r.Post("/report-medicplus", createReportForPatientDoctorToMedicplus(opts)) //A
-		r.Post("/report-merchant", createReportForPatientDoctorToMerchant(opts))   //A
-		r.Put("/report", updateReportForPatientDoctor(opts))                       //A
+		r.Post("/report-medicplus", createReportForPatientDoctorToMedicplus(opts))
+		r.Post("/report-merchant", createReportForPatientDoctorToMerchant(opts))
+		r.Put("/report", updateReportForPatientDoctor(opts))
 
 	})
 
@@ -117,7 +117,7 @@ func createFeedbackForPatientToDoctor(opts []kitHttp.ServerOption) http.HandlerF
 			DecodeModel: &public.CreateFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func createFeedbackForPatientDoctorToMedicplus(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -125,7 +125,7 @@ func createFeedbackForPatientDoctorToMedicplus(opts []kitHttp.ServerOption) http
 			DecodeModel: &public.CreateFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func createFeedbackForPatientDoctorToMerchant(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -133,7 +133,7 @@ func createFeedbackForPatientDoctorToMerchant(opts []kitHttp.ServerOption) http.
 			DecodeModel: &public.CreateFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func getFeedbackForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -141,7 +141,7 @@ func getFeedbackForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.GetFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listFeedbacksForDoctorAnonymously(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -149,7 +149,7 @@ func listFeedbacksForDoctorAnonymously(opts []kitHttp.ServerOption) http.Handler
 			DecodeModel: &public.ListFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listFeedbacksForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -157,7 +157,7 @@ func listFeedbacksForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listFeedbacksForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -165,7 +165,7 @@ func listFeedbacksForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func updateFeedbackForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -173,7 +173,7 @@ func updateFeedbackForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFun
 			DecodeModel: &public.UpdateFeedbackRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 //Feedback Parameter =========================================================================================================================================================================================
 func createFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
@@ -182,7 +182,7 @@ func createFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFu
 			DecodeModel: &public.CreateFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func getFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -190,7 +190,7 @@ func getFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc 
 			DecodeModel: &public.GetFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listFeedbackParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -198,7 +198,7 @@ func listFeedbackParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func updateFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -206,7 +206,7 @@ func updateFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFu
 			DecodeModel: &public.UpdateFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func deleteFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -214,7 +214,7 @@ func deleteFeedbackParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFu
 			DecodeModel: &public.DeleteFeedbackParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 //Report =========================================================================================================================================================================================
 func createReportForPatientToDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
@@ -223,7 +223,7 @@ func createReportForPatientToDoctor(opts []kitHttp.ServerOption) http.HandlerFun
 			DecodeModel: &public.CreateReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func createReportForPatientDoctorToMedicplus(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -231,7 +231,7 @@ func createReportForPatientDoctorToMedicplus(opts []kitHttp.ServerOption) http.H
 			DecodeModel: &public.CreateReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func createReportForPatientDoctorToMerchant(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -239,7 +239,7 @@ func createReportForPatientDoctorToMerchant(opts []kitHttp.ServerOption) http.Ha
 			DecodeModel: &public.CreateReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func getReport(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -247,7 +247,7 @@ func getReport(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.GetReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listReportsForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -255,7 +255,7 @@ func listReportsForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listReportsForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -263,7 +263,7 @@ func listReportsForPatient(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listReportsForDoctorAnonymously(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -271,7 +271,7 @@ func listReportsForDoctorAnonymously(opts []kitHttp.ServerOption) http.HandlerFu
 			DecodeModel: &public.ListReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func updateReportForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -279,7 +279,7 @@ func updateReportForPatientDoctor(opts []kitHttp.ServerOption) http.HandlerFunc 
 			DecodeModel: &public.UpdateReportRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 //Report Parameter =========================================================================================================================================================================================
 func createReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
@@ -288,7 +288,7 @@ func createReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc
 			DecodeModel: &public.CreateReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func getReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -296,7 +296,7 @@ func getReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.GetReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func listReportParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -304,7 +304,7 @@ func listReportParameters(opts []kitHttp.ServerOption) http.HandlerFunc {
 			DecodeModel: &public.ListReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func updateReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -312,7 +312,7 @@ func updateReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc
 			DecodeModel: &public.UpdateReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
 
 func deleteReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -320,4 +320,4 @@ func deleteReportParameterForAdmin(opts []kitHttp.ServerOption) http.HandlerFunc
 			DecodeModel: &public.DeleteReportParameterRequest{},
 		}, opts).ServeHTTP(w, r)
 	}
-} //D
+}
