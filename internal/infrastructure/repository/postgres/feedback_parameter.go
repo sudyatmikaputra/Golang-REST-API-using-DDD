@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/medicplus-inc/medicplus-feedback/config"
@@ -142,11 +141,11 @@ func (s *feedbackParameterPostgres) DeleteFeedbackParameter(ctx context.Context,
 		db = tx
 	}
 
-	now := time.Now().UTC()
-	feedbackParameter.DeletedAt = &now
-	err := db.Delete(feedbackParameter).Error
-	if err != nil {
-		return err
+	if feedbackParameter.DeletedBy != &uuid.Nil {
+		err := db.Delete(feedbackParameter).Error
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

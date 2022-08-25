@@ -11,7 +11,6 @@ import (
 	libError "github.com/medicplus-inc/medicplus-kit/error"
 )
 
-//DeleteFeedbackParameter deleting feedback parameter
 func (s *FeedbackParameterService) DeleteFeedbackParameter(ctx context.Context, params *public.DeleteFeedbackParameterRequest) error {
 	userLoggedIn, _ := global.GetClaimsFromContext(ctx)
 	userLoggedInID := uuid.MustParse(userLoggedIn["uuid"].(string))
@@ -25,7 +24,15 @@ func (s *FeedbackParameterService) DeleteFeedbackParameter(ctx context.Context, 
 	}
 
 	feedbackParameter.DeletedBy = &userLoggedInID
-	err = s.repository.DeleteFeedbackParameter(ctx, feedbackParameter)
+	updatedFeedbackParameter, err := s.repository.UpdateFeedbackParameter(ctx, feedbackParameter)
+	if err != nil {
+		return err
+	}
+	if updatedFeedbackParameter == nil {
+		return libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
+	}
+
+	err = s.repository.DeleteFeedbackParameter(ctx, updatedFeedbackParameter)
 	if err != nil {
 		return err
 	}

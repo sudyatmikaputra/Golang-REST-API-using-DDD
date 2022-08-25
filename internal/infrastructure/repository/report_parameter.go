@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/medicplus-inc/medicplus-feedback/internal"
 	"github.com/medicplus-inc/medicplus-feedback/internal/public"
+	"gorm.io/gorm"
 )
 
 type ReportParameter struct {
@@ -19,7 +20,7 @@ type ReportParameter struct {
 	CreatedAt    time.Time              `json:"created_at" gorm:"not null,autoCreateTime"`
 	UpdatedAt    time.Time              `json:"updated_at" gorm:"not null,autoUpdateTime"`
 	UpdatedBy    uuid.UUID              `json:"updated_by" gorm:"not null"`
-	DeletedAt    *time.Time             `json:"deleted_at"`
+	DeletedAt    gorm.DeletedAt         `json:"deleted_at"`
 	DeletedBy    *uuid.UUID             `json:"deleted_by"`
 }
 

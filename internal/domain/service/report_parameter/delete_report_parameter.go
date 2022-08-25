@@ -25,8 +25,15 @@ func (s *ReportParameterService) DeleteReportParameter(ctx context.Context, para
 	}
 
 	reportParameterRepo.DeletedBy = &userLoggedInID
+	updatedReportParameter, err := s.repository.UpdateReportParameter(ctx, reportParameterRepo)
+	if err != nil {
+		return err
+	}
+	if updatedReportParameter == nil {
+		return libError.New(internal.ErrInvalidResponse, http.StatusBadRequest, internal.ErrInvalidResponse.Error())
+	}
 
-	err = s.repository.DeleteReportParameter(ctx, reportParameterRepo)
+	err = s.repository.DeleteReportParameter(ctx, updatedReportParameter)
 	if err != nil {
 		return err
 	}
