@@ -1,8 +1,3 @@
-# Medicplus Feedback and Report
-
-## Description
-Provide feedback and report service for Medicplus.co.id
-
 ## Requirement
 
 1. Install and run PostgreSQL in local with port 5432 by exec this command 
