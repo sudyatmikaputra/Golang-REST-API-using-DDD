@@ -1,0 +1,1403 @@
+{
+	"info": {
+		"_postman_id": "c1082be6-7b80-404a-ac47-afbf89720994",
+		"name": "Medicplus-Feedback",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23850202"
+	},
+	"item": [
+		{
+			"name": "Feedback",
+			"item": [
+				{
+					"name": "Create Feedback For P To D",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"feedback_type\": \"doctor\",\n   \"feedback_to_id\" : \"133f9695-490c-4e5a-b1a5-105345e28fd1\",\n   \"feedback_from_id\" : \"57850416-2abd-4ff2-8fa5-0ed5f1bc227b\",\n   \"feedback_value\"    : 1,\n   \"notes\"    : \"this is a test notes\"\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/feedback-doctor",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Feedback For PD To Medicplus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"feedback_type\": \"medicplus\",\n   \"feedback_to_id\" : \"133f9695-490c-4e5a-b1a5-105345e28fd1\",\n   \"feedback_from_id\" : \"57850416-2abd-4ff2-8fa5-0ed5f1bc227b\",\n   \"feedback_value\"    : 1,\n   \"notes\"    : \"this is a test notes\"\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/feedback-medicplus",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-medicplus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Feedback For PD To Merchant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"feedback_type\": \"merchant\",\n   \"feedback_to_id\" : \"133f9695-490c-4e5a-b1a5-105345e28fd1\",\n   \"feedback_from_id\" : \"57850416-2abd-4ff2-8fa5-0ed5f1bc227b\",\n   \"feedback_value\"    : 1,\n   \"notes\"    : \"this is a test notes\"\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/feedback-merchant",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-merchant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Feedback For PD",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedback?id=4295c996-d4f4-491e-9dce-56f3696f5d96&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4295c996-d4f4-491e-9dce-56f3696f5d96"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Feedbacks For D Anonymously",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedbacks/doctor?feedback_to_id=e0867e35-84c2-4846-903b-af88772ac46b&feedback_type=doctor&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedbacks",
+								"doctor"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "test",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "feedback_to_id",
+									"value": "e0867e35-84c2-4846-903b-af88772ac46b"
+								},
+								{
+									"key": "feedback_from_id",
+									"value": "57850416-2abd-4ff2-8fa5-0ed5f1bc227b",
+									"disabled": true
+								},
+								{
+									"key": "feedback_type",
+									"value": "doctor"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Feedbacks For P",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedbacks/patient?feedback_from_id=8081d5b5-5d3d-4917-9ee1-faf12467175f&feedback_type=doctor&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedbacks",
+								"patient"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "test",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "feedback_to_id",
+									"value": "e0867e35-84c2-4846-903b-af88772ac46b",
+									"disabled": true
+								},
+								{
+									"key": "feedback_from_id",
+									"value": "8081d5b5-5d3d-4917-9ee1-faf12467175f"
+								},
+								{
+									"key": "feedback_type",
+									"value": "doctor"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Feedbacks For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedbacks/admin?feedback_from_id=8081d5b5-5d3d-4917-9ee1-faf12467175f&feedback_type=doctor&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedbacks",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "test",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "feedback_to_id",
+									"value": "e0867e35-84c2-4846-903b-af88772ac46b",
+									"disabled": true
+								},
+								{
+									"key": "feedback_from_id",
+									"value": "8081d5b5-5d3d-4917-9ee1-faf12467175f"
+								},
+								{
+									"key": "feedback_type",
+									"value": "doctor"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Feedback For PD",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"3aeb5b5e-52da-4d46-9af1-ec4567fbec84\",\n    \"feedback_value\":3,\n    \"notes\":\"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/feedback",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Feedback Parameter",
+			"item": [
+				{
+					"name": "Create Feedback Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"feedback_type\": \"medicplus\",\n   \"name\":\"medicplus\",\n   \"language_code\":\"id\",\n   \"is_default\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/feedback-parameter",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-parameter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Feedback Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedback-parameter?id=e3dcfcc6-9a81-4425-8dd7-41d587f66ef3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-parameter"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "e3dcfcc6-9a81-4425-8dd7-41d587f66ef3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Feedback Parameters",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedback-parameters?page=1&feedback_type=merchant&language_code=en",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-parameters"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "test",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "feedback_type",
+									"value": "merchant"
+								},
+								{
+									"key": "language_code",
+									"value": "en"
+								},
+								{
+									"key": "is_default",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Feedback Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"1a3fd83e-5081-4535-ab68-4b671fb76380\",\n    \"feedback_type\":\"medicplus\",\n    \"name\":\"awdadwdawd\",\n    \"language_code\":\"id\",\n    \"is_default\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/feedback-parameter",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-parameter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Feedback Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/feedback-parameter?id=110227a6-ab22-4ebb-8470-f023f0a78f18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"feedback-parameter"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "110227a6-ab22-4ebb-8470-f023f0a78f18"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Report",
+			"item": [
+				{
+					"name": "Create Report For P To D",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"report_type\":\"doctor\",\n    \"report_to_id\":\"ffc2b74a-8064-4a9e-b6af-2af0fa023e23\",\n    \"report_from_id\":\"948f83f2-e7b1-4a2a-b067-9fe1f401d38a\",\n    \"context\":\"consultation\",\n    \"context_id\":\"7c9fc2e6-bb19-411e-a1aa-b729bb25cae1\",\n    \"notes\":\"awdawdwa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/report-doctor",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Report For PD To Medicplus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"report_type\":\"medicplus\",\n    \"report_to_id\":\"ffc2b74a-8064-4a9e-b6af-2af0fa023e23\",\n    \"report_from_id\":\"948f83f2-e7b1-4a2a-b067-9fe1f401d38a\",\n    \"context\":\"medicplus\",\n    \"context_id\":\"7c9fc2e6-bb19-411e-a1aa-b729bb25cae1\",\n    \"notes\":\"awdawdwa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/report-medicplus",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-medicplus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Report For PD To Merchant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"report_type\":\"merchant\",\n    \"report_to_id\":\"ffc2b74a-8064-4a9e-b6af-2af0fa023e23\",\n    \"report_from_id\":\"948f83f2-e7b1-4a2a-b067-9fe1f401d38a\",\n    \"context\":\"purchase\",\n    \"context_id\":\"7c9fc2e6-bb19-411e-a1aa-b729bb25cae1\",\n    \"notes\":\"awdawdwa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/report-merchant",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-merchant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Report",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/report?id=4da958c7-f93f-4a42-86a7-7a1d49bc7a13&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4da958c7-f93f-4a42-86a7-7a1d49bc7a13"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Report For D Anonymously",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/reports/doctor?report_type=doctor&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"reports",
+								"doctor"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_from_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_to_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_type",
+									"value": "doctor"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Report For P",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/reports/patient?report_from_id=8081d5b5-5d3d-4917-9ee1-faf12467175f&report_type=medicplus&language_code=en",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"reports",
+								"patient"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "awd",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_from_id",
+									"value": "8081d5b5-5d3d-4917-9ee1-faf12467175f"
+								},
+								{
+									"key": "report_to_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_type",
+									"value": "medicplus"
+								},
+								{
+									"key": "language_code",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Report For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/reports/admin?report_type=doctor&language_code=id",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"reports",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_from_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_to_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_type",
+									"value": "doctor"
+								},
+								{
+									"key": "language_code",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Report For PD",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_patient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"38c8a6db-f197-47f6-9396-a0bcc0d687bb\",\n    \"notes\":\"sayaa amau tidur\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/report",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Report Parameter",
+			"item": [
+				{
+					"name": "Create Report Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-TOKEN",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"report_type\":\"doctor\",\n    \"name\":\"doctor\",\n    \"language_code\":\"en\",\n    \"is_default\":true\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/report-parameter",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-parameter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Report Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/report-parameter?id=67f3e7a2-f7e2-4802-bca1-2b9580701668",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-parameter"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "67f3e7a2-f7e2-4802-bca1-2b9580701668"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Report Parameters",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/report-parameters?report_type=doctor&language_code=en",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-parameters"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "is_default",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "report_type",
+									"value": "doctor"
+								},
+								{
+									"key": "language_code",
+									"value": "en"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Report Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"52ff45d5-2959-41aa-8b48-2fdaf8112a1a\",\n    \"report_type\":\"doctor\",\n    \"name\":\"wewewew\",\n    \"language_code\":\"en\",\n    \"is_default\":false\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/report-parameter",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-parameter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Report Parameter For A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{X-CSRF-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/report-parameter?id=52ff45d5-2959-41aa-8b48-2fdaf8112a1a",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"report-parameter"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "52ff45d5-2959-41aa-8b48-2fdaf8112a1a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,27 @@
+Step 1 :
+Install postgreSQL and redis on docker then run both of it.
+
+Step 2 :
+in Postman, set environtment :
+Host = http://localhost:8001/api
+JWT_admin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNWYwNDkxMjUtZjc0Yi00ODA1LWJhZWMtMzRiYzZjOGQ5OTA2IiwibmFtZSI6IkNsYXJhIFNtaXRoIiwicm9sZSI6ImFkbWluIn0.ImhU6-EQcDejuET-mi_M6fQtHUg2AAO9mkwtiWUCbGk
+
+JWT_patient = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMzA0MTU1ZWUtZDRkOS00YWVmLTkxNmQtNDhmNGZiZjE3NzZlIiwidXVpZDIiOiI4MWU4MmM1YS1lNDkwLTRhMmUtYjEzYi02NDI2ZWUyNWIxYTIiLCJuYW1lIjoiRGF2aWQgQmVjayIsInJvbGUiOiJwYXRpZW50In0.ZC-V372iAWdV8LgNYdcL4Rf__hA9KN9G1n4FvaQx3qY
+
+JWT_doctor = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTUyZTE0YTAtZWIyMC00MWY1LTllN2EtMGM0OTU3OWQ3YjRkIiwidXVpZDIiOiI4YTUxMmZhMC1hM2IxLTRjYWQtODMwNS1lMjFlNmQ0NDdiMGEiLCJuYW1lIjoiRHIgSmFuZSIsInJvbGUiOiJkb2N0b3IifQ.n_suRvE3owvtLqZqLZX1q7KFWno1XyJDnCoRS7gmmdk
+
+Step 3 :
+import attached .json file to postman
+
+Step 4 :
+Create database in postgres "medicplus-feedback"
+
+Step 5 :
+To run:
+go run cmd/medicplus/main.go
+
+Exposed port:
+Listen to port 8001 by default and 9100 for profiler
+
+Step 6 :
+test the API with Postman

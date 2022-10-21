@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "16291655-1933-4e66-88b3-d4054c4ce7e8",
+		"name": "CSRF",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23850202"
+	},
+	"item": [
+		{
+			"name": "Get CSRF",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"X-CSRF-Token\", pm.response.headers.get(\"X-CSRF-Token\"))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Host}}",
+					"host": [
+						"{{Host}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
